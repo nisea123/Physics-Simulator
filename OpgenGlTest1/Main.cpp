@@ -1,30 +1,17 @@
 #include<iostream>
+#include <vector>
 #include<glad/glad.h>
 #include<GLFW/glfw3.h>
 #include <stb/stb_image.h>
 
 #include "shaderClass.h"
 #include "Object.h"
+#include "Renderer.h"
 #include "VAO.h"
 #include "VBO.h"
 #include "EBO.h"
 
 using namespace std;
-
-GLfloat vertices[] =
-{
-	// position				// color
-
-	-0.5f, -0.5f, 0.0f,	 1.0f, 1.0f, 1.0f,
-	-0.5f,  0.5f, 0.0f,	 1.0f, 1.0f, 1.0f,
-	 0.5f,  0.5f, 0.0f,	 1.0f, 1.0f, 1.0f,
-	 0.5f, -0.5f, 0.0f,  1.0f, 1.0f ,1.0f
-};
-
-GLuint indices[] = {
-	0, 2, 1,
-	0, 3 ,2
-};
 
 int main() {
 
@@ -65,24 +52,37 @@ int main() {
 	// Creates the VAO
 	VAO VAO1;
 	VAO1.Bind();
+	
+	Renderer renderer;
 
+	constexpr float TAU = 6.28318530718f;
+	int count = 1;
+	float step = TAU / count;
+
+	
+
+	Circle circle(step / 10, { 0.0f, 0.0f });
+
+	Square floor({ 4.0f,1.0f }, { 0.0f,-1.5f });
+	
 	// Creates the VBO and EBO	
-	VBO VBO1(vertices, sizeof(vertices));
-	EBO EBO1(indices, sizeof(indices));
+	VBO VBO1(&renderer.vertices);
+	EBO EBO1(&renderer.indices);
 
-	// Links them
 	VAO1.LinkAttrib(VBO1, 0, 3, GL_FLOAT, 6 * sizeof(float), (void*)0);
 	VAO1.LinkAttrib(VBO1, 1, 3, GL_FLOAT, 6 * sizeof(float), (void*)(3 * sizeof(float)));
 	VAO1.Unbind();
 	VBO1.Unbind();
 	EBO1.Unbind();
 
-	Square square({ 1.f,1.f }, { 0.f,0.f });
-
 	GLuint uniID = glGetUniformLocation(shaderProgram.ID, "scale");
+
+	float i = 0;
 
 	//Main while loop
 	while (!glfwWindowShouldClose(window)) {
+
+		i+= .01;
 
 		glClearColor(0.08f, 0.13f, 0.17f, 1.f);
 		glClear(GL_COLOR_BUFFER_BIT);
@@ -90,8 +90,23 @@ int main() {
 		shaderProgram.Activate();
 		glUniform1f(uniID, -.5f);
 
+		renderer.Clear();
+
+		//circle.Position = { cos(angle),sin(angle) };
+		//circle.Rotation += i;
+
+		renderer.Draw(floor);
+		renderer.Draw(circle);
+		
 		VAO1.Bind();
-		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
+		VBO1.Bind();
+		glBufferData(GL_ARRAY_BUFFER, renderer.vertices.size() * sizeof(GLfloat), renderer.vertices.data(), GL_DYNAMIC_DRAW);
+
+		EBO1.Bind();
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, renderer.indices.size() * sizeof(GLuint), renderer.indices.data(), GL_DYNAMIC_DRAW);
+
+		glDrawElements(GL_TRIANGLES, renderer.indices.size(), GL_UNSIGNED_INT, 0);
 
 		glfwSwapBuffers(window);
 

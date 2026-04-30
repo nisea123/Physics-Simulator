@@ -3,7 +3,6 @@
 
 #include "Structs.h"
 #include "Transform.h"
-#include "Renderer.h"
 
 class Object
 {
@@ -17,11 +16,12 @@ public:
 class Square : public Object 
 {
 public:
-	Vec2 Size = { 10.0f, 10.0f };
+	Vec2 Size = { 0.0f ,0.0f };
 	Square(Vec2 siz, Vec2 pos) 
 	{
 		Size = siz;
 		Position = pos;
+		AnchorPoint = { Size.x / 2.f, Size.y / 2.f };
 	};
 };
 
@@ -33,6 +33,17 @@ public:
 		Radius = rad;
 		Position = pos;
 	}
+};
+
+class Triangle : public Object
+{
+public:
+	Vec2 Size = { 0.0f, 0.0f };
+	Triangle(Vec2 siz, Vec2 pos)
+	{
+		Size = siz;
+		Position = pos;
+	};
 };
 
 #endif

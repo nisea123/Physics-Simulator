@@ -1,21 +1,18 @@
 #pragma once
 
-#include "Structs.h"
+#include <glad/glad.h>
+#include "Object.h"
+#include <vector>
 
-enum class ShapeType
+class Renderer 
 {
-	Rectangle,
-	Circle
-};
+public:
 
-struct Renderer
-{
-	ShapeType shape;
+	std::vector<GLfloat> vertices;
+	std::vector<GLuint> indices;
 
-	float width  = 1.0f;
-	float height = 1.0f;
-	float radius = 1.0f;
-
-	
-
+	void Draw(const Square& item);
+	void Draw(const Circle& item);
+	void Draw(const Triangle& item);
+	void Clear();
 };
