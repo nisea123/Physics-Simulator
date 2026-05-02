@@ -20,11 +20,16 @@ void Renderer::Draw(const Square& item) {
 
 	unsigned int ind = vertices.size() / 6;
 
+	int x1 = cX - w / 2; // left
+	int x2 = cX + w / 2; // right
+	int y1 = cY - h / 2; // bottom
+	int y2 = cY + h / 2; // top
+
 	vertices.insert(vertices.end(), {
-		(cX - w / 2) * cos(rot), cY + h / 2 * sin(rot), 0.0f ,r ,g ,b, // left top
-		(cX + w / 2) * cos(rot), (cY + h / 2) * sin(rot), 0.0f ,r ,g ,b, // right top
-		(cX + w / 2) * cos(rot), (cY - h / 2) * sin(rot), 0.0f ,r ,g ,b, // right bottom
-		(cX - w / 2) * cos(rot), (cY - h / 2) * sin(rot), 0.0f ,r ,g ,b, // left bottom
+		x1 * cos(rot) - y1 * sin(rot), y1 * cos(rot) + x1 * sin(rot), 0.0f ,r ,g ,b, // left top
+		x2 * cos(rot) - y1 * sin(rot), y1 * cos(rot) + x2 * sin(rot), 0.0f ,r ,g ,b, // right top
+		x2 * cos(rot) - y2 * sin(rot), y2 * cos(rot) + x2 * sin(rot), 0.0f ,r ,g ,b, // right bottom
+		x1 * cos(rot) - y2 * sin(rot), y2 * cos(rot) + x1 * sin(rot), 0.0f ,r ,g ,b, // left bottom
 		});
 
 	indices.insert(indices.end(), {
@@ -40,9 +45,9 @@ void Renderer::Draw(const Circle& item) {
 	float x = item.Position.x;
 	float y = item.Position.y;
 
-	float r = 0.498f;
+	float r = 1.0f;
 	float g = 1.0f;
-	float b = 0.0f;
+	float b = 1.0f;
 
 	float num = 6.28 / n;
 
@@ -53,11 +58,14 @@ void Renderer::Draw(const Circle& item) {
 	vertices.insert(vertices.end(), {
 		x * float(cos(rot)), y * float(sin(rot)), 0.0f, r, g, b
 		});
+
 	int count = 0;
+
 	for (float i = 0; i < 6.28; i += num) {
+
 		count++;
 		vertices.insert(vertices.end(), {
-			ra * float(cos(i+rot)) + x,ra * float(sin(i+rot)) + y , 0.0f, r * float(sin(i)), g * float(sin(i)) , b * float(sin(i)),
+			ra * float(cos(i+rot)) + x,ra * float(sin(i+rot)) + y , 0.0f, r * sin(i + rot), g * sin(i + rot), b * sin(i + rot),
 			});
 	}
 	for (int i = 1; i <= count; i++) {

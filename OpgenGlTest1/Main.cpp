@@ -1,6 +1,6 @@
 #include<iostream>
 #include <vector>
-#include<glad/glad.h>
+#include <glad/glad.h>
 #include<GLFW/glfw3.h>
 #include <stb/stb_image.h>
 
@@ -27,7 +27,7 @@ int main() {
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 	//Makes a window 800x800
-	GLFWwindow* window = glfwCreateWindow(800,800,"First OpenGl", NULL, NULL);
+	GLFWwindow* window = glfwCreateWindow(800, 800, "First OpenGl", NULL, NULL);
 
 
 	//Error if the window cant be created
@@ -52,18 +52,26 @@ int main() {
 	// Creates the VAO
 	VAO VAO1;
 	VAO1.Bind();
-	
+
 	Renderer renderer;
 
 	constexpr float TAU = 6.28318530718f;
-	int count = 1;
+	int count = 64;
 	float step = TAU / count;
 
-	
 
 	Circle circle(step / 10, { 0.0f, 0.0f });
 
 	Square floor({ 4.0f,1.0f }, { 0.0f,-1.5f });
+
+	Square block({ 2.0f, 1.0f }, { 0.0f, 1.f });
+
+	vector<Circle> circArr;
+
+	for (int a = 0; a < count; a += 1) {
+		Circle x(step / 5, { 0.0f, 0.0f });
+		circArr.push_back(x);
+	}
 	
 	// Creates the VBO and EBO	
 	VBO VBO1(&renderer.vertices);
@@ -82,7 +90,7 @@ int main() {
 	//Main while loop
 	while (!glfwWindowShouldClose(window)) {
 
-		i+= .01;
+		i += .01;
 
 		glClearColor(0.08f, 0.13f, 0.17f, 1.f);
 		glClear(GL_COLOR_BUFFER_BIT);
@@ -94,9 +102,21 @@ int main() {
 
 		//circle.Position = { cos(angle),sin(angle) };
 		//circle.Rotation += i;
+		
+		//floor.Rotation += i;
 
-		renderer.Draw(floor);
-		renderer.Draw(circle);
+		for (int a = 0; a < count; a++) {
+			circArr[a].Position = {cos(a - i),sin(a - i) };
+			circArr[a].Rotation = tan(i);
+			renderer.Draw(circArr[a]);
+		}
+
+		//block.Rotation = i;
+
+		//renderer.Draw(block);
+
+		//renderer.Draw(floor);
+		//renderer.Draw(circle);
 		
 		VAO1.Bind();
 
