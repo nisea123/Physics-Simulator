@@ -51,6 +51,9 @@
     <ClCompile Include="Renderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Transform.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Text Include="default.vert">
@@ -78,13 +81,13 @@
     <ClInclude Include="Structs.h">
       <Filter>Header Files\Math</Filter>
     </ClInclude>
-    <ClInclude Include="Transform.h">
-      <Filter>Header Files\Core</Filter>
-    </ClInclude>
     <ClInclude Include="Object.h">
       <Filter>Header Files\Core</Filter>
     </ClInclude>
     <ClInclude Include="Renderer.h">
+      <Filter>Header Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Transform.h">
       <Filter>Header Files\Core</Filter>
     </ClInclude>
   </ItemGroup>

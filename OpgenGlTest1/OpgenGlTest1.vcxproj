@@ -154,6 +154,7 @@
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="shaderClass.cpp" />
     <ClCompile Include="stb.cpp" />
+    <ClCompile Include="Transform.cpp" />
     <ClCompile Include="VAO.cpp" />
     <ClCompile Include="VBO.cpp" />
   </ItemGroup>

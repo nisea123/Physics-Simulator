@@ -3,6 +3,8 @@
 #include <glad/glad.h>
 #include<GLFW/glfw3.h>
 #include <stb/stb_image.h>
+#include <math.h>
+#include <algorithm>
 
 #include "shaderClass.h"
 #include "Object.h"
@@ -53,37 +55,40 @@ int main() {
 	VAO VAO1;
 	VAO1.Bind();
 
-	Renderer renderer;
+	Renderer renderer(shaderProgram);
 
 	constexpr float TAU = 6.28318530718f;
 	int count = 64;
 	float step = TAU / count;
 
+	Rectangle block({ 1.0f, 1.0f }, { 0.0f, 0.0f });
 
-	Circle circle(step / 10, { 0.0f, 0.0f });
+	Circle circ(1, { 0.0f,0.0f });
 
-	Square floor({ 4.0f,1.0f }, { 0.0f,-1.5f });
+	//vector<Circle> circArr;
 
-	Square block({ 2.0f, 1.0f }, { 0.0f, 1.f });
-
-	vector<Circle> circArr;
-
-	for (int a = 0; a < count; a += 1) {
-		Circle x(step / 5, { 0.0f, 0.0f });
-		circArr.push_back(x);
-	}
+	//for(int i = 0;i < count;i++){
+	//	Circle circ(step, { 0.0f,0.0f });
+	//	circ.Transform.Scale = { .1f,.1f };
+	//	circArr.push_back(circ);
+	//}
+	
+	Triangle trig({ 1.f,1.f }, { 0.0f,0.0f });
 	
 	// Creates the VBO and EBO	
 	VBO VBO1(&renderer.vertices);
 	EBO EBO1(&renderer.indices);
 
-	VAO1.LinkAttrib(VBO1, 0, 3, GL_FLOAT, 6 * sizeof(float), (void*)0);
-	VAO1.LinkAttrib(VBO1, 1, 3, GL_FLOAT, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+	glDisable(GL_DEPTH_TEST);
+	VAO1.LinkAttrib(VBO1, 0, 3, GL_FLOAT, 8 * sizeof(float), (void*)0);
+	VAO1.LinkAttrib(VBO1, 1, 3, GL_FLOAT, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+	VAO1.LinkAttrib(VBO1, 2, 2, GL_FLOAT, 8 * sizeof(float), (void*)(6 * sizeof(float)));
 	VAO1.Unbind();
 	VBO1.Unbind();
 	EBO1.Unbind();
 
-	GLuint uniID = glGetUniformLocation(shaderProgram.ID, "scale");
+	GLuint borderLoc = glGetUniformLocation(shaderProgram.ID, "borderSize");
+	GLuint borderColorLoc = glGetUniformLocation(shaderProgram.ID, "borderColor");
 
 	float i = 0;
 
@@ -92,31 +97,28 @@ int main() {
 
 		i += .01;
 
-		glClearColor(0.08f, 0.13f, 0.17f, 1.f);
+		//glClearColor(0.08f, 0.13f, 0.17f, 1.f);
+		glClearColor(1.f, 1.f, 1.f, 1.f);
 		glClear(GL_COLOR_BUFFER_BIT);
 		
 		shaderProgram.Activate();
-		glUniform1f(uniID, -.5f);
 
 		renderer.Clear();
 
-		//circle.Position = { cos(angle),sin(angle) };
-		//circle.Rotation += i;
-		
-		//floor.Rotation += i;
+		//for (float a = 0; a < count; a++) {
+		//	float r = (sin(i) + 1.0f) * 0.5f;
+		//	float g = (sin(i + 2.094f) + 1.0f) * 0.5f;
+		//	float b = (sin(i + 4.188f) + 1.0f) * 0.5f;
+		//	circArr[a].Transform.Position = {1/tan(a+i),cos(sin(a+i))};
+		//	//circArr[a].Transform.Rotation = i;
+		//	circArr[a].Color = {r,g,b};
+		//	renderer.Draw(circArr[a]);
+		//}
 
-		for (int a = 0; a < count; a++) {
-			circArr[a].Position = {cos(a - i),sin(a - i) };
-			circArr[a].Rotation = tan(i);
-			renderer.Draw(circArr[a]);
-		}
+		//renderer.Draw(circ);
+		//renderer.Draw(trig);
 
-		//block.Rotation = i;
-
-		//renderer.Draw(block);
-
-		//renderer.Draw(floor);
-		//renderer.Draw(circle);
+		renderer.Draw(block);
 		
 		VAO1.Bind();
 

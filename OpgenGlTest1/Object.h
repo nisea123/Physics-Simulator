@@ -4,24 +4,46 @@
 #include "Structs.h"
 #include "Transform.h"
 
+struct Border
+{
+	float Thickness = 0.02f;
+	Color Color = { 0.f,0.f,0.f,0.f };
+};
+
 class Object
 {
 public:
-	Vec2 Position = { 0.0f, 0.0f };
-	Vec2 AnchorPoint = { 0.0f ,0.0f };
-	float Rotation = 0.0f;
+	Transform Transform;
 	Color Color;
+	Border Border;
+	int ShapeType;
 };
 
-class Square : public Object 
+
+class Triangle : public Object
+{
+public:
+	Vec2 Size = { 0.0f, 0.0f };
+
+	Triangle(Vec2 siz, Vec2 pos)
+	{
+		Size = siz;
+		Transform.Position = pos;
+		ShapeType = 0;
+	};
+};
+
+
+class Rectangle : public Object 
 {
 public:
 	Vec2 Size = { 0.0f ,0.0f };
-	Square(Vec2 siz, Vec2 pos) 
+	Rectangle(Vec2 siz, Vec2 pos) 
 	{
 		Size = siz;
-		Position = pos;
-		AnchorPoint = { Size.x / 2.f, Size.y / 2.f };
+		Transform.Position = pos;
+		ShapeType = 1;
+		//AnchorPoint = { Size.x / 2.f, Size.y / 2.f };
 	};
 };
 
@@ -31,19 +53,8 @@ public:
 	float Radius = 1;
 	Circle(float rad, Vec2 pos) {
 		Radius = rad;
-		Position = pos;
+		Transform.Position = pos;
+		ShapeType = 2;
 	}
 };
-
-class Triangle : public Object
-{
-public:
-	Vec2 Size = { 0.0f, 0.0f };
-	Triangle(Vec2 siz, Vec2 pos)
-	{
-		Size = siz;
-		Position = pos;
-	};
-};
-
 #endif
