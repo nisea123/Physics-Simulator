@@ -19,13 +19,12 @@ public:
 	int ShapeType;
 };
 
-
 class Triangle : public Object
 {
 public:
-	Vec2 Size = { 0.0f, 0.0f };
+	Vec2f Size = { 0.0f, 0.0f };
 
-	Triangle(Vec2 siz, Vec2 pos)
+	Triangle(Vec2f siz, Vec2f pos)
 	{
 		Size = siz;
 		Transform.Position = pos;
@@ -37,8 +36,11 @@ public:
 class Rectangle : public Object 
 {
 public:
-	Vec2 Size = { 0.0f ,0.0f };
-	Rectangle(Vec2 siz, Vec2 pos) 
+	Vec2f Size;
+	Rectangle() {
+	 Size = { 0.0f ,0.0f };
+	}
+	Rectangle(Vec2f siz, Vec2f pos) 
 	{
 		Size = siz;
 		Transform.Position = pos;
@@ -51,7 +53,7 @@ class Circle : public Object
 {
 public:
 	float Radius = 1;
-	Circle(float rad, Vec2 pos) {
+	Circle(float rad, Vec2f pos) {
 		Radius = rad;
 		Transform.Position = pos;
 		ShapeType = 2;

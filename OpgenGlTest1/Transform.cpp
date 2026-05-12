@@ -1,7 +1,7 @@
 #include "Transform.h"
 #include <math.h>
 
-Vec2 Transform::Apply(Vec2 p)
+Vec2f Transform::Apply(Vec2f p)
 {
 	float cosR = cos(Rotation);
 	float sinR = sin(Rotation);

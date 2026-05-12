@@ -5,13 +5,19 @@ in vec2 UV;
 
 out vec4 FragColor;
 
+uniform sampler2D textTexture;
 uniform float borderSize;
 uniform vec3 borderColor;
 uniform int shapeType;
 
 void main()
 {
-    if(shapeType == 0)
+    if(shapeType == -1)
+    {
+    float alpha = texture(textTexture, UV).r;
+    FragColor = vec4(Color,alpha);
+    }
+  else if(shapeType == 0)
     {
   // triangle (barycentric)
           float edge = min(min(UV.x, UV.y), 1.0 - UV.x - UV.y);
@@ -32,7 +38,7 @@ void main()
         else
             FragColor = vec4(Color, 1.0);
     
-    }
+    } 
     else
     {
       // circle (radial UV assumed centered)

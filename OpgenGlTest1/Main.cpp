@@ -2,16 +2,17 @@
 #include <vector>
 #include <glad/glad.h>
 #include<GLFW/glfw3.h>
-#include <stb/stb_image.h>
+#include <chrono>
 #include <math.h>
-#include <algorithm>
+#include <map>
 
 #include "shaderClass.h"
 #include "Object.h"
 #include "Renderer.h"
-#include "VAO.h"
-#include "VBO.h"
-#include "EBO.h"
+#include "TextRenderer.h"
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 using namespace std;
 
@@ -29,8 +30,16 @@ int main() {
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 	//Makes a window 800x800
-	GLFWwindow* window = glfwCreateWindow(800, 800, "First OpenGl", NULL, NULL);
+	unsigned int width = 1920;
+	unsigned int height = 1080;
 
+	GLFWwindow* window = glfwCreateWindow(width, height, "First OpenGl", NULL, NULL);
+
+	glm::mat4 proj = glm::ortho(
+		0.0f, (float)width,
+		0.0f, (float)height,   // flipped Y
+		-1.0f, 1.0f
+	);
 
 	//Error if the window cant be created
 	if (window == NULL) {
@@ -46,89 +55,69 @@ int main() {
 	gladLoadGL();
 
 	//Specifies the position and size of the viewport
-	glViewport(0, 0, 800, 800);
+	glViewport(0, 0, width, height);
 
 	// Creating the vertex shader
 	Shader shaderProgram("default.vert", "default.frag");
 
-	// Creates the VAO
-	VAO VAO1;
-	VAO1.Bind();
-
 	Renderer renderer(shaderProgram);
-
-	constexpr float TAU = 6.28318530718f;
-	int count = 64;
-	float step = TAU / count;
 
 	Rectangle block({ 1.0f, 1.0f }, { 0.0f, 0.0f });
 
 	Circle circ(1, { 0.0f,0.0f });
-
-	//vector<Circle> circArr;
-
-	//for(int i = 0;i < count;i++){
-	//	Circle circ(step, { 0.0f,0.0f });
-	//	circ.Transform.Scale = { .1f,.1f };
-	//	circArr.push_back(circ);
-	//}
 	
 	Triangle trig({ 1.f,1.f }, { 0.0f,0.0f });
-	
-	// Creates the VBO and EBO	
-	VBO VBO1(&renderer.vertices);
-	EBO EBO1(&renderer.indices);
 
-	glDisable(GL_DEPTH_TEST);
-	VAO1.LinkAttrib(VBO1, 0, 3, GL_FLOAT, 8 * sizeof(float), (void*)0);
-	VAO1.LinkAttrib(VBO1, 1, 3, GL_FLOAT, 8 * sizeof(float), (void*)(3 * sizeof(float)));
-	VAO1.LinkAttrib(VBO1, 2, 2, GL_FLOAT, 8 * sizeof(float), (void*)(6 * sizeof(float)));
-	VAO1.Unbind();
-	VBO1.Unbind();
-	EBO1.Unbind();
+	Font font("OpenSans.ttf");
+	Text txt(font);
 
-	GLuint borderLoc = glGetUniformLocation(shaderProgram.ID, "borderSize");
-	GLuint borderColorLoc = glGetUniformLocation(shaderProgram.ID, "borderColor");
+	Text counter(font);
+	counter.Transform.Position = { width / 2.f, 1000};
 
+	UiBlock click(font,{200.f,200.f},{width/ 2.f,1000});
+	click.text.Content = "Spawn Square";
+	click.rect.Color = { 0.f,0.f,0.f,1.f };
+		
 	float i = 0;
+
+	static auto last = chrono::high_resolution_clock::now();
+	auto now = chrono::high_resolution_clock::now();
+	float deltaTime = chrono::duration<float>(now - last).count();
+
+	txt.Transform.Position = { width / 2.f, height / 2.f };
+
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	//Main while loop
 	while (!glfwWindowShouldClose(window)) {
 
-		i += .01;
+		i += .1;
 
-		//glClearColor(0.08f, 0.13f, 0.17f, 1.f);
-		glClearColor(1.f, 1.f, 1.f, 1.f);
-		glClear(GL_COLOR_BUFFER_BIT);
-		
-		shaderProgram.Activate();
+
+		now = chrono::high_resolution_clock::now();
+		deltaTime = chrono::duration<float>(now - last).count();
 
 		renderer.Clear();
+		//glBindTexture(GL_TEXTURE_2D, atlas);
 
-		//for (float a = 0; a < count; a++) {
-		//	float r = (sin(i) + 1.0f) * 0.5f;
-		//	float g = (sin(i + 2.094f) + 1.0f) * 0.5f;
-		//	float b = (sin(i + 4.188f) + 1.0f) * 0.5f;
-		//	circArr[a].Transform.Position = {1/tan(a+i),cos(sin(a+i))};
-		//	//circArr[a].Transform.Rotation = i;
-		//	circArr[a].Color = {r,g,b};
-		//	renderer.Draw(circArr[a]);
-		//}
-
-		//renderer.Draw(circ);
-		//renderer.Draw(trig);
-
-		renderer.Draw(block);
+		glUniformMatrix4fv(
+			glGetUniformLocation(shaderProgram.ID, "projection"),
+			1,
+			GL_FALSE,
+			&proj[0][0]
+		);
 		
-		VAO1.Bind();
+		txt.Content = "In the beginning, the two nations lived at peace,until the evil forces emerged from the depths of hell";
+		counter.Content = to_string(deltaTime);
+		renderer.Draw(click.rect);
+		renderer.Draw(txt);
+		renderer.Draw(counter);
+		
 
-		VBO1.Bind();
-		glBufferData(GL_ARRAY_BUFFER, renderer.vertices.size() * sizeof(GLfloat), renderer.vertices.data(), GL_DYNAMIC_DRAW);
+		//cout << click.rect.Transform.Position.y << endl;
 
-		EBO1.Bind();
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, renderer.indices.size() * sizeof(GLuint), renderer.indices.data(), GL_DYNAMIC_DRAW);
-
-		glDrawElements(GL_TRIANGLES, renderer.indices.size(), GL_UNSIGNED_INT, 0);
+		renderer.Render();
 
 		glfwSwapBuffers(window);
 
@@ -137,11 +126,7 @@ int main() {
 	}
 	
 	// Deletes them
-	VAO1.Delete();
-	VBO1.Delete();
-	EBO1.Delete();
-	shaderProgram.Delete();
-
+	renderer.Destroy();
 	glfwDestroyWindow(window);
 	glfwTerminate();
 

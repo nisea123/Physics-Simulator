@@ -4,9 +4,9 @@
 
 struct Transform
 {
-	Vec2 Position = { 0.f, 0.f };
+	Vec2f Position = { 0.0f, 0.0f };
 	float Rotation = 0.f;
-	Vec2 Scale = { 1.f, 1.f };
+	Vec2f Scale = { 1.f, 1.f };
 
-	Vec2 Apply(Vec2 point);
+	Vec2f Apply(Vec2f point);
 };

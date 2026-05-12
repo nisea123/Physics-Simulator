@@ -2,132 +2,67 @@
 #include "Renderer.h"
 #include <iostream>
 
-void Renderer::Draw(const Triangle& item) {
+Renderer::Renderer(Shader& s)
+	: shader(s), VBO1(&vertices), EBO1(&indices)
+{
+	VAO1.Bind();
 
-	float w = item.Size.x;
-	float h = item.Size.y;
+	VBO1.Bind();
+	EBO1.Bind();
 
-	float r = item.Color.r;
-	float g = item.Color.g;
-	float b = item.Color.b;
-
-	Transform Transform = item.Transform;
-
-	Vec2 p1 = Transform.Apply({ 0,0 });
-	Vec2 p2 = Transform.Apply({ w,0 });
-	Vec2 p3 = Transform.Apply({ 0,h });
-
-	unsigned int ind = vertices.size() / 8;
-
-	DrawBorder(item);
-
-	vertices.insert(vertices.end(), {
-		p1.x, p1.y ,0.0f, r, g, b, 0,0,
-		p2.x, p2.y ,0.0f, r ,g ,b, 1,0,
-		p3.x, p3.y, 0.0f, r, g, b, 0,1
-		});
-	indices.insert(indices.end(), {
-		ind,ind + 1, ind + 2
-		});
+	VAO1.LinkAttrib(VBO1, 0, 3, GL_FLOAT, VERTEX_SIZE * sizeof(float), (void*)0);
+	VAO1.LinkAttrib(VBO1, 1, 3, GL_FLOAT, VERTEX_SIZE * sizeof(float), (void*)(3 * sizeof(float)));
+	VAO1.LinkAttrib(VBO1, 2, 2, GL_FLOAT, VERTEX_SIZE * sizeof(float), (void*)(6 * sizeof(float)));
+	VAO1.Unbind();
 }
 
-void Renderer::Draw(const Rectangle& item) {
+void Renderer::Render() {
 
+	if (indices.empty() || vertices.empty()) return;
 
-	float w = item.Size.x;
-	float h = item.Size.y;
+	shader.Activate();
 
-	float r = item.Color.r;
-	float g = item.Color.g;
-	float b = item.Color.b;
+	glUniform1i(glGetUniformLocation(shader.ID, "textTexture"), 0);
 
-	Transform Transform = item.Transform;
+	VAO1.Bind();
+	VBO1.Bind();
+	EBO1.Bind();
 
-	unsigned int ind = vertices.size() / 8;
+	UploadBuffers();
 
-	Vec2 p1 = Transform.Apply({ -w / 2,  h / 2 });
-	Vec2 p2 = Transform.Apply({ w / 2,  h / 2 });
-	Vec2 p3 = Transform.Apply({ w / 2, -h / 2 });
-	Vec2 p4 = Transform.Apply({ -w / 2, -h / 2 });
-
-	DrawBorder(item);
-
-	vertices.insert(vertices.end(), {
-		// p1 (left top)
-		p1.x, p1.y, 0.0f,  r,g,b,  0,0,
-
-		// p2 (right top)
-		p2.x, p2.y, 0.0f,  r,g,b,  1,0,
-
-		// p3 (right bottom)
-		p3.x, p3.y, 0.0f,  r,g,b,  1,1,
-
-		// p4 (left bottom)
-		p4.x, p4.y, 0.0f,  r,g,b,  0,1
-		});
-
-	indices.insert(indices.end(), {
-		ind, ind + 1, ind + 2,
-		ind, ind + 2, ind + 3
-		});
+	DrawBuffers();
 }
 
-void Renderer::Draw(const Circle& item) {
-	int n = 30;
+void Renderer::UploadBuffers() {
+	glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(GLfloat), vertices.data(), GL_DYNAMIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(GLuint), indices.data(), GL_DYNAMIC_DRAW);
 
-	float ra = item.Radius;
+}
 
-	float r = item.Color.r;
-	float g = item.Color.g;
-	float b = item.Color.b;
+void Renderer::DrawBuffers() {
+	glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
+}
 
-	float num = 6.28 / n;
+void Renderer::Destroy() {
 
-	float rot = item.Transform.Rotation;
+	VAO1.Delete();
+	VBO1.Delete();
+	EBO1.Delete();
+	shader.Delete();
 
-	Transform Transform = item.Transform;
-
-	unsigned int ind = vertices.size() / 8;
-
-	Vec2 p1 = Transform.Apply({ 0,0 });
-
-	DrawBorder(item);
-
-	vertices.insert(vertices.end(), {
-		p1.x, p1.y, 0.0f, r, g, b, 0,0
-		});
-
-	int count = 0;
-
-	for (float i = 0; i < 6.28; i += num) {
-		Vec2 p = Transform.Apply({cos(i) * ra,sin(i) * ra});
-		count++;
-		vertices.insert(vertices.end(), {
-			p.x, p.y , 0.0f, r, g, b, cos(i), sin(i)
-			});
-	}
-	for (int i = 1; i <= count; i++) {
-		unsigned int current = ind + i;
-		unsigned int next = ind + (i % count) + 1;
-		indices.insert(indices.end(), {
-			ind, current, next
-			});
-	}
 }
 
 void Renderer::Clear() {
-	vertices.clear();
-	indices.clear();
+	ClearScreen();
+	ClearBuffers();
 }
 
-void Renderer::DrawBorder(const Object& item) {
-	GLuint shapeTypeLoc = glGetUniformLocation(shader.ID,"shapeType");
-	GLuint borderSize = glGetUniformLocation(shader.ID, "borderSize");;
-	GLuint borderColorLoc = glGetUniformLocation(shader.ID, "borderColor");
+void Renderer::ClearScreen() {
+	glClearColor(1.f, 1.f, 1.f, 1.f);
+	glClear(GL_COLOR_BUFFER_BIT);
+}
 
-	auto [r, g, b, a] = item.Border.Color;
-
-	glUniform1i(shapeTypeLoc, item.ShapeType);
-	glUniform1f(borderSize, item.Border.Thickness);
-	glUniform3f(borderColorLoc,r,g,b);
+void Renderer::ClearBuffers() {
+	vertices.clear();
+	indices.clear();
 }
