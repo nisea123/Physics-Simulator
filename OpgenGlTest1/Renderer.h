@@ -7,7 +7,7 @@
 #include "VAO.h"
 #include "EBO.h"
 #include "shaderClass.h"
-#include "TextRenderer.h"
+#include "UiRenderer.h"
 #include <map>
 
 class Renderer 
@@ -17,7 +17,7 @@ public:
 
 	std::vector<GLfloat> vertices;
 	std::vector<GLuint> indices;
-	static constexpr int VERTEX_SIZE = 8;
+	static constexpr int VERTEX_SIZE = 9;
 
 	Renderer(Shader& s);
 
@@ -26,7 +26,7 @@ public:
 	void Draw(const Circle& item);
 	void Draw(const Triangle& item);
 	void Draw(const Text& txt);
-	void Draw(const UiBlock& item);
+	void Draw(const UiElement& item);
 
 	//GPU stuff binding and stuff
 	void Render(); // Drawing the stuff on the screen
@@ -36,8 +36,6 @@ private:
 	VBO VBO1;
 	VAO VAO1;
 	EBO EBO1;
-
-	void DrawBorder(const Object& item);
 
 	void UploadBuffers(); // Uploading to GPU
 	void DrawBuffers();

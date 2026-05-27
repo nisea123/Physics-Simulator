@@ -151,12 +151,16 @@
     <ClCompile Include="EBO.cpp" />
     <ClCompile Include="glad.c" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Object.cpp" />
+    <ClCompile Include="ObjectManager.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="RendererDraw.cpp" />
     <ClCompile Include="shaderClass.cpp" />
     <ClCompile Include="stb.cpp" />
     <ClCompile Include="TextRenderer.cpp" />
     <ClCompile Include="Transform.cpp" />
+    <ClCompile Include="UiBuilder.cpp" />
+    <ClCompile Include="UiRenderer.h" />
     <ClCompile Include="VAO.cpp" />
     <ClCompile Include="VBO.cpp" />
   </ItemGroup>
@@ -164,21 +168,25 @@
     <Text Include="default.vert" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="default.frag" />
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="EBO.h" />
+    <ClInclude Include="Mouse.h" />
     <ClInclude Include="Object.h" />
+    <ClInclude Include="ObjectManager.h" />
     <ClInclude Include="Renderer.h" />
+    <ClInclude Include="Scene.h" />
     <ClInclude Include="Structs.h" />
     <ClInclude Include="TextRenderer.h" />
     <ClInclude Include="Transform.h" />
+    <ClInclude Include="UiManager.h" />
     <ClInclude Include="VAO.h" />
     <ClInclude Include="VBO.h" />
     <ClInclude Include="shaderClass.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\..\..\..\Downloads\car.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="default.frag" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

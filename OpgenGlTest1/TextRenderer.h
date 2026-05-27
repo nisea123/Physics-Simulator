@@ -9,6 +9,7 @@
 #include "Object.h"
 #include <string>
 #include <map>
+#include <functional>
 
 struct Character {
 	Vec2i Size;
@@ -35,18 +36,7 @@ public:
 	Transform Transform;
 	Color Color;
 	std::string Content;
+	float ShapeType = -1;
 
 	Text(Font& f) : font(f) {};
-};
-
-class UiBlock
-{
-public:
-	Rectangle rect;
-	Text text;
-
-	UiBlock(Font& font, Vec2f size, Vec2f pos) : rect(size, pos), text(font) {
-		text.Transform.Position = pos;
-		rect.Transform.Position = pos;
-	};
 };

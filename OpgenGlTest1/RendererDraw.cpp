@@ -1,6 +1,4 @@
 #include "Renderer.h"
-#include <map>
-#include "TextRenderer.h"
 
 using namespace std;
 
@@ -21,12 +19,12 @@ void Renderer::Draw(const Triangle& item) {
 
 	unsigned int ind = vertices.size() / VERTEX_SIZE;
 
-	DrawBorder(item);
+	float type = item.ShapeType;
 
 	vertices.insert(vertices.end(), {
-		p1.x, p1.y ,0.0f, r, g, b, 0,0,
-		p2.x, p2.y ,0.0f, r ,g ,b, 1,0,
-		p3.x, p3.y, 0.0f, r, g, b, 0,1
+		p1.x, p1.y ,0.0f, r, g, b, 0,0, type,
+		p2.x, p2.y ,0.0f, r ,g ,b, 1,0, type,
+		p3.x, p3.y, 0.0f, r, g, b, 0,1, type
 		});
 	indices.insert(indices.end(), {
 		ind,ind + 1, ind + 2
@@ -51,21 +49,21 @@ void Renderer::Draw(const Rectangle& item) {
 	Vec2f p2 = Transform.Apply({ w / 2,  h / 2 });
 	Vec2f p3 = Transform.Apply({ w / 2, -h / 2 });
 	Vec2f p4 = Transform.Apply({ -w / 2, -h / 2 });
-
-	DrawBorder(item);
+	
+	float type = item.ShapeType;
 
 	vertices.insert(vertices.end(), {
 		// p1 (left top)
-		p1.x, p1.y, 0.0f,  r,g,b,  0,0,
+		p1.x, p1.y, 0.0f,  r,g,b,  0,0, type,
 
 		// p2 (right top)
-		p2.x, p2.y, 0.0f,  r,g,b,  1,0,
+		p2.x, p2.y, 0.0f,  r,g,b,  1,0, type,
 
 		// p3 (right bottom)
-		p3.x, p3.y, 0.0f,  r,g,b,  1,1,
+		p3.x, p3.y, 0.0f,  r,g,b,  1,1, type,
 
 		// p4 (left bottom)
-		p4.x, p4.y, 0.0f,  r,g,b,  0,1
+		p4.x, p4.y, 0.0f,  r,g,b,  0,1, type
 		});
 
 	indices.insert(indices.end(), {
@@ -91,21 +89,23 @@ void Renderer::Draw(const Circle& item) {
 
 	unsigned int ind = vertices.size() / VERTEX_SIZE;
 
+	float type = item.ShapeType;
+
 	Vec2f p1 = Transform.Apply({ 0,0 });
 
-	DrawBorder(item);
-
 	vertices.insert(vertices.end(), {
-		p1.x, p1.y, 0.0f, r, g, b, 0,0
+		p1.x, p1.y, 0.0f, r, g, b, 0.5,0.5, type
 		});
 
 	int count = 0;
 
 	for (float i = 0; i < 6.28; i += num) {
 		Vec2f p = Transform.Apply({ cos(i) * ra,sin(i) * ra });
+		float u = cos(i) * 0.5f + 0.5f;
+		float v = sin(i) * 0.5f + 0.5f;
 		count++;
 		vertices.insert(vertices.end(), {
-			p.x, p.y , 0.0f, r, g, b, cos(i), sin(i)
+			p.x, p.y , 0.0f, r, g, b, u, v, type
 			});
 	}
 	for (int i = 1; i <= count; i++) {
@@ -119,13 +119,13 @@ void Renderer::Draw(const Circle& item) {
 
 void Renderer::Draw(const Text& txt)
 {
-	int orgX = txt.Transform.Position.x;
-	int limitX = 1920;
+	float orgX = txt.Transform.Position.x;
+	float limitX = 1920;
 
-	int lineHeight = txt.font.lineHeight;
+	float lineHeight = txt.font.lineHeight;
 
 	float x = orgX;
-	float y = txt.Transform.Position.y;
+	float y = txt.Transform.Position.y - lineHeight;
 
 	float r = 0.0f, g = 0.0f, b = 0.0f;
 
@@ -148,16 +148,18 @@ void Renderer::Draw(const Text& txt)
 
 		unsigned int ind = vertices.size() / VERTEX_SIZE;
 
+		float type = txt.ShapeType;
+
 		float u0 = ch.UV1.x;
 		float v0 = ch.UV1.y;
 		float u1 = ch.UV2.x;
 		float v1 = ch.UV2.y;
 		
 		vertices.insert(vertices.end(), {
-			xpos,     ypos + h, 0, r,g,b, u0, v1,
-			xpos,     ypos,     0, r,g,b, u0, v0,
-			xpos + w, ypos,     0, r,g,b, u1, v0,
-			xpos + w, ypos + h, 0, r,g,b, u1, v1
+			xpos,     ypos + h, 0, r,g,b, u0, v1, type,
+			xpos,     ypos,     0, r,g,b, u0, v0, type,
+			xpos + w, ypos,     0, r,g,b, u1, v0, type,
+			xpos + w, ypos + h, 0, r,g,b, u1, v1, type
 			});
 
 		indices.insert(indices.end(), {
@@ -168,26 +170,12 @@ void Renderer::Draw(const Text& txt)
 		x += (ch.Advance >> 6);
 	}
 
-	glUniform1i(glGetUniformLocation(shader.ID, "shapeType"), -1);
 	glActiveTexture(GL_TEXTURE0); // Activate slot 0
 	glBindTexture(GL_TEXTURE_2D, txt.font.id); // Bind your loaded texture to slot 0
 
 }
 
-void Renderer::Draw(const UiBlock& item) {
+void Renderer::Draw(const UiElement& item) {
 	Draw(item.rect);
 	Draw(item.text);
-}
-
-void Renderer::DrawBorder(const Object& item) {
-	GLuint shapeTypeLoc = glGetUniformLocation(shader.ID, "shapeType");
-	GLuint borderSize = glGetUniformLocation(shader.ID, "borderSize");;
-	GLuint borderColorLoc = glGetUniformLocation(shader.ID, "borderColor");
-	glBindTexture(GL_TEXTURE_2D, 0);
-
-	auto [r, g, b, a] = item.Border.Color;
-
-	glUniform1i(shapeTypeLoc, item.ShapeType);
-	glUniform1f(borderSize, item.Border.Thickness);
-	glUniform3f(borderColorLoc, r, g, b);
 }

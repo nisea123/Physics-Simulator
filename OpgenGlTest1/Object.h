@@ -16,7 +16,13 @@ public:
 	Transform Transform;
 	Color Color;
 	Border Border;
-	int ShapeType;
+	float ShapeType = 0;
+
+	void OnDrag(Vec2f delta) {
+		Transform.Position.x += delta.x;
+		Transform.Position.y += delta.y;
+	};
+	virtual bool Contains(Vec2f p) = 0;
 };
 
 class Triangle : public Object
@@ -30,8 +36,8 @@ public:
 		Transform.Position = pos;
 		ShapeType = 0;
 	};
+	bool Contains(Vec2f p) override;
 };
-
 
 class Rectangle : public Object 
 {
@@ -45,8 +51,8 @@ public:
 		Size = siz;
 		Transform.Position = pos;
 		ShapeType = 1;
-		//AnchorPoint = { Size.x / 2.f, Size.y / 2.f };
 	};
+	bool Contains(Vec2f p) override;
 };
 
 class Circle : public Object
@@ -58,5 +64,7 @@ public:
 		Transform.Position = pos;
 		ShapeType = 2;
 	}
+	bool Contains(Vec2f p) override;
 };
+
 #endif

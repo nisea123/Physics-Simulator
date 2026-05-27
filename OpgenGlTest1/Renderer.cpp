@@ -13,6 +13,7 @@ Renderer::Renderer(Shader& s)
 	VAO1.LinkAttrib(VBO1, 0, 3, GL_FLOAT, VERTEX_SIZE * sizeof(float), (void*)0);
 	VAO1.LinkAttrib(VBO1, 1, 3, GL_FLOAT, VERTEX_SIZE * sizeof(float), (void*)(3 * sizeof(float)));
 	VAO1.LinkAttrib(VBO1, 2, 2, GL_FLOAT, VERTEX_SIZE * sizeof(float), (void*)(6 * sizeof(float)));
+	VAO1.LinkAttrib(VBO1, 3, 1, GL_FLOAT, VERTEX_SIZE * sizeof(float), (void*)(8 * sizeof(float)));
 	VAO1.Unbind();
 }
 
@@ -58,7 +59,7 @@ void Renderer::Clear() {
 }
 
 void Renderer::ClearScreen() {
-	glClearColor(1.f, 1.f, 1.f, 1.f);
+	glClearColor(0.07f, 0.13f, 0.17f, 1.f);
 	glClear(GL_COLOR_BUFFER_BIT);
 }
 

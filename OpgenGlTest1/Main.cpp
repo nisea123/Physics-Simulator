@@ -9,7 +9,8 @@
 #include "shaderClass.h"
 #include "Object.h"
 #include "Renderer.h"
-#include "TextRenderer.h"
+#include "Mouse.h"
+#include "Scene.h"
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -29,11 +30,14 @@ int main() {
 	//Means we only use modern functions
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-	//Makes a window 800x800
-	unsigned int width = 1920;
-	unsigned int height = 1080;
+	//Makes a window
+	GLFWmonitor* monitor = glfwGetPrimaryMonitor();
+	const GLFWvidmode* mode = glfwGetVideoMode(monitor);
 
-	GLFWwindow* window = glfwCreateWindow(width, height, "First OpenGl", NULL, NULL);
+	unsigned int width = mode->width;
+	unsigned int height = mode->height;
+
+	GLFWwindow* window = glfwCreateWindow(width, height, "Physics Engine", NULL, NULL);
 
 	glm::mat4 proj = glm::ortho(
 		0.0f, (float)width,
@@ -62,21 +66,17 @@ int main() {
 
 	Renderer renderer(shaderProgram);
 
-	Rectangle block({ 1.0f, 1.0f }, { 0.0f, 0.0f });
-
-	Circle circ(1, { 0.0f,0.0f });
-	
-	Triangle trig({ 1.f,1.f }, { 0.0f,0.0f });
-
-	Font font("OpenSans.ttf");
+	Font font("lemonChicken.ttf");
 	Text txt(font);
 
 	Text counter(font);
 	counter.Transform.Position = { width / 2.f, 1000};
 
-	UiBlock click(font,{200.f,200.f},{width/ 2.f,1000});
-	click.text.Content = "Spawn Square";
-	click.rect.Color = { 0.f,0.f,0.f,1.f };
+	Mouse mouse;
+
+	Scene scene;
+
+	scene.objects.SpawnWorld<Rectangle>( Vec2f{ 600,600 },Vec2f{ width / 2.f, height / 2.f });
 		
 	float i = 0;
 
@@ -86,19 +86,27 @@ int main() {
 
 	txt.Transform.Position = { width / 2.f, height / 2.f };
 
+	Object* selectedObject = nullptr;
+	Object* hoveredObject = nullptr;
+
+	UiElement* hoveredUi = nullptr;
+
+	bool checked = false;
+
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	//Main while loop
 	while (!glfwWindowShouldClose(window)) {
 
-		i += .1;
-
+		i += .1f;
 
 		now = chrono::high_resolution_clock::now();
 		deltaTime = chrono::duration<float>(now - last).count();
 
 		renderer.Clear();
+		int w, h;
+		glfwGetFramebufferSize(window, &w, &h);
 		//glBindTexture(GL_TEXTURE_2D, atlas);
 
 		glUniformMatrix4fv(
@@ -107,14 +115,84 @@ int main() {
 			GL_FALSE,
 			&proj[0][0]
 		);
-		
-		txt.Content = "In the beginning, the two nations lived at peace,until the evil forces emerged from the depths of hell";
-		counter.Content = to_string(deltaTime);
-		renderer.Draw(click.rect);
-		renderer.Draw(txt);
-		renderer.Draw(counter);
-		
 
+		mouse.Update(window, h);
+		
+		hoveredObject = nullptr;
+		hoveredUi = nullptr;
+
+		for (auto& ui : scene.ui.ui)
+		{
+			if (ui->Contains(mouse.position))
+			{
+				hoveredUi = ui.get();
+			}
+		}
+
+		if (!hoveredUi) {
+			for (auto& object : scene.objects.objects)
+			{
+				if (object->Contains(mouse.position))
+				{
+					hoveredObject = object.get();
+				}
+			}
+		}
+
+		if (mouse.m1Pressed)
+		{
+			if (hoveredUi) {
+				if (hoveredUi->OnClick) {
+					hoveredUi->OnClick();
+				}
+			}
+			else if (hoveredObject) {
+				selectedObject = hoveredObject;
+				mouse.dragOffset = mouse.position - selectedObject->Transform.Position;
+			}
+		}
+		
+		if(mouse.m1 && selectedObject){
+			selectedObject->Transform.Position = mouse.position - mouse.dragOffset;
+		}
+
+		if (!mouse.m1) {
+			selectedObject = nullptr;
+		}
+
+		for (auto& object : scene.objects.objects) {
+			Object* o = object.get();
+
+			if (auto* r = dynamic_cast<Rectangle*>(o))
+				renderer.Draw(*r);
+
+			else if (auto* c = dynamic_cast<Circle*>(o))
+				renderer.Draw(*c);
+
+			else if (auto* t = dynamic_cast<Triangle*>(o))
+				renderer.Draw(*t);
+		}
+		for (auto& object : scene.ui.ui) {
+			UiElement* o = object.get();
+
+			if (auto* r = dynamic_cast<UiFrame*>(o))
+				renderer.Draw(*r);
+			else if (auto* c = dynamic_cast<UiButton*>(o))
+				renderer.Draw(*c);
+			else if (auto* t = dynamic_cast<UiSlider*>(o))
+				renderer.Draw(*t);
+			else if (auto* y = dynamic_cast<UiText*>(o))
+				renderer.Draw(*y);
+		}
+
+		//txt.Content = "In the beginning, the two nations lived at peace,until the evil forces emerged from the depths of hell";
+		//counter.Content = to_string(deltaTime);
+
+		//renderer.Draw(txt);
+		
+		//renderer.Draw(counter);
+		//renderer.Draw(trig);
+		//renderer.Draw(circ);
 		//cout << click.rect.Transform.Position.y << endl;
 
 		renderer.Render();
