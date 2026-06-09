@@ -71,7 +71,7 @@ int main() {
 
 	Scene scene;
 
-	scene.objects.SpawnWorld<Rectangle>( Vec2f{ 600,600 },Vec2f{ width / 2.f, height / 2.f });
+	scene.objects.SpawnWorld<Circle>(400.f,Vec2f{ width / 2.f, height / 2.f });
 		
 	float i = 0;
 
@@ -125,6 +125,7 @@ int main() {
 		{
 			if (hoveredUi) {
 				if (hoveredUi->OnClick) {
+					cout << "Clicked" << endl;
 					hoveredUi->OnClick();
 				}
 			}
@@ -141,7 +142,6 @@ int main() {
 		if (!mouse.m1) {
 			selectedObject = nullptr;
 		}
-
 		for (auto& object : scene.objects.objects) {
 			Object* o = object.get();
 

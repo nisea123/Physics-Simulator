@@ -36,27 +36,16 @@ void Renderer::Draw(const Rectangle& item) {
 }
 
 void Renderer::Draw(const Circle& item) {
-	int n = 30;
+	 
+	ShapeInstance shapeInstance;
 
-	float ra = item.Radius;
+	shapeInstance.color = item.Color;
+	shapeInstance.position = item.Transform.Position;
+	shapeInstance.size = Vec2f(item.Radius,item.Radius);
+	shapeInstance.radius = item.Radius;
+	shapeInstance.type = item.ShapeType;
 
-	float r = item.Color.r;
-	float g = item.Color.g;
-	float b = item.Color.b;
-
-	float num = 6.28 / n;
-
-	float rot = item.Transform.Rotation;
-
-	Transform Transform = item.Transform;
-
-
-	float type = item.ShapeType;
-
-	Vec2f p1 = Transform.Apply({ 0,0 });
-
-	int count = 0;
-
+	objRenderer.shapeInstances.push_back(shapeInstance);
 }
 
 void Renderer::Draw(const Text& txt)

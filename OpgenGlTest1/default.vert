@@ -16,6 +16,7 @@ out vec4 Color;
 out float shapeType;
 out float Radius;
 out vec2 localPos;
+out vec2 size;
 
 void main()
 {
@@ -29,7 +30,8 @@ void main()
     Color = iColor;
     Radius = iRadius;
     shapeType = iType;
+    size = iSize;
 
     // IMPORTANT: local position for SDF
-    localPos = aPos * iSize;
+    localPos = aPos;
 }

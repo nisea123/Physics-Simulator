@@ -18,6 +18,6 @@ struct ShapeInstance
 	Color color;
 
 	float radius;
-	int type;
+	float type;
 	float rotation;
 };

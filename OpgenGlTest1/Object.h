@@ -52,7 +52,7 @@ public:
 class Circle : public Object
 {
 public:
-	float Radius = 1;
+	float Radius = 1.f;
 	Circle(float rad, Vec2f pos) {
 		Radius = rad;
 		Transform.Position = pos;

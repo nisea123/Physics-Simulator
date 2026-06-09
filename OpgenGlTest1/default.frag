@@ -2,6 +2,7 @@
 
 in vec4 Color;
 in vec2 localPos;
+in vec2 size;
 in float shapeType;
 in float Radius;
 
@@ -10,7 +11,6 @@ out vec4 FragColor;
 uniform sampler2D textTexture;
 
 vec3 borderColor = vec3(0.0);
-float t = 0.005;
 
 void DrawTriangle();
 void DrawRectangle();
@@ -25,11 +25,7 @@ float RoundedRectSDF(vec2 p, vec2 b, float r)
 
 void main()
 {
-    if(shapeType == 0)
-    {
-        DrawText();
-    }
-    else if(shapeType == 1)
+  if(shapeType == 1)
     {
         DrawTriangle();
     }
@@ -43,18 +39,33 @@ void main()
     }
 }
 
-void DrawText(){
-   float alpha = texture(textTexture, localPos).a;
-   FragColor = vec4(Color.xyz, alpha);
-}
 
 void DrawTriangle(){
 }
 
-void DrawRectangle(){
-   FragColor = Color;
+void DrawRectangle()
+{
+    vec2 p = (localPos - vec2(0.5)) * size;
+    vec2 b = size * 0.5;
+
+    float r = min(Radius, min(b.x, b.y));
+
+    float d = RoundedRectSDF(p, b, r);
+
+    float alpha = 1.0 - smoothstep(-fwidth(d), fwidth(d), d);
+
+    FragColor = vec4(Color.rgb, Color.a * alpha);
 }
 
-void DrawCircle(){
-     
+void DrawCircle()
+{
+    vec2 p = (localPos - vec2(.5)) * Radius;
+
+    float r = Radius * 0.5;
+
+    float d = length(p) - r;
+
+    float alpha = 1.0 - smoothstep(-fwidth(d), fwidth(d), d);
+
+    FragColor = vec4(Color.rgb, Color.a * alpha);
 }

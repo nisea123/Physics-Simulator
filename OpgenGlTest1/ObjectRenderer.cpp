@@ -14,6 +14,8 @@ ObjectRenderer::ObjectRenderer(Shader& s)
 	objEBO.Bind();
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(GLuint), indices.data(), GL_DYNAMIC_DRAW);
 
+	instanceVBO.Bind();
+
 	//Quad
 	objVAO.LinkAttrib(quadVBO, 0, 2, GL_FLOAT, 2 * sizeof(float), (void*)0);
 
