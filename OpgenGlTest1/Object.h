@@ -4,18 +4,11 @@
 #include "Structs.h"
 #include "Transform.h"
 
-struct Border
-{
-	float Thickness = 0.02f;
-	Color Color = { 0.f,0.f,0.f,0.f };
-};
-
 class Object
 {
 public:
 	Transform Transform;
 	Color Color;
-	Border Border;
 	float ShapeType = 0;
 
 	void OnDrag(Vec2f delta) {
@@ -34,7 +27,7 @@ public:
 	{
 		Size = siz;
 		Transform.Position = pos;
-		ShapeType = 0;
+		ShapeType = 1;
 	};
 	bool Contains(Vec2f p) override;
 };
@@ -43,6 +36,7 @@ class Rectangle : public Object
 {
 public:
 	Vec2f Size;
+	float CornerRadius = 0.f;
 	Rectangle() {
 	 Size = { 0.0f ,0.0f };
 	}
@@ -50,7 +44,7 @@ public:
 	{
 		Size = siz;
 		Transform.Position = pos;
-		ShapeType = 1;
+		ShapeType = 2;
 	};
 	bool Contains(Vec2f p) override;
 };
@@ -62,7 +56,7 @@ public:
 	Circle(float rad, Vec2f pos) {
 		Radius = rad;
 		Transform.Position = pos;
-		ShapeType = 2;
+		ShapeType = 3;
 	}
 	bool Contains(Vec2f p) override;
 };

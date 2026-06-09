@@ -1,42 +1,35 @@
 #pragma once
 
-//#include "ft2build.h"
-//#include  FT_FREETYPE_H
-
 #include <glad/glad.h>
-#include "Structs.h"
-#include "Transform.h"
-#include "Object.h"
-#include <string>
-#include <map>
-#include <functional>
+#include <vector>
 
-struct Character {
-	Vec2i Size;
-	Vec2i Bearing;
-	unsigned int Advance;
+#include "VBO.h"
+#include "VAO.h"
+#include "EBO.h"
+#include "shaderClass.h"
+#include "Ui.h"
 
-	Vec2f UV1;
-	Vec2f UV2;
-};
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
-class Font {
+class TextRenderer
+{
 public:
-	GLuint id;
-	int lineHeight;
-	std::map<char, Character> Characters;
+	Shader& shader;
 
-	Font(const char* txt);
+	vector<GLfloat> textVertices;
+	vector<GLuint> textIndices;
 
-};
+	TextRenderer(Shader& s);
+	void Render(const glm::mat4& proj); // Drawing the stuff on the screen
+	void Destroy(); // Destroys the VBO VAO AND EBO at the end of the program
+	void ClearBuffers();
 
-class Text {
-public:
-	Font& font;
-	Transform Transform;
-	Color Color;
-	std::string Content;
-	float ShapeType = -1;
+private: 
 
-	Text(Font& f) : font(f) {};
+	VBO textVBO;
+	VAO textVAO;
+	EBO textEBO;
+
 };

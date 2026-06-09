@@ -62,15 +62,10 @@ int main() {
 	glViewport(0, 0, width, height);
 
 	// Creating the vertex shader
-	Shader shaderProgram("default.vert", "default.frag");
+	Shader ObjectShaderProgram("default.vert", "default.frag");
+	Shader TextShaderProgram("text.vert", "text.frag");
 
-	Renderer renderer(shaderProgram);
-
-	Font font("lemonChicken.ttf");
-	Text txt(font);
-
-	Text counter(font);
-	counter.Transform.Position = { width / 2.f, 1000};
+	Renderer renderer(ObjectShaderProgram,TextShaderProgram);
 
 	Mouse mouse;
 
@@ -84,8 +79,6 @@ int main() {
 	auto now = chrono::high_resolution_clock::now();
 	float deltaTime = chrono::duration<float>(now - last).count();
 
-	txt.Transform.Position = { width / 2.f, height / 2.f };
-
 	Object* selectedObject = nullptr;
 	Object* hoveredObject = nullptr;
 
@@ -93,12 +86,8 @@ int main() {
 
 	bool checked = false;
 
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
 	//Main while loop
 	while (!glfwWindowShouldClose(window)) {
-
 		i += .1f;
 
 		now = chrono::high_resolution_clock::now();
@@ -108,13 +97,6 @@ int main() {
 		int w, h;
 		glfwGetFramebufferSize(window, &w, &h);
 		//glBindTexture(GL_TEXTURE_2D, atlas);
-
-		glUniformMatrix4fv(
-			glGetUniformLocation(shaderProgram.ID, "projection"),
-			1,
-			GL_FALSE,
-			&proj[0][0]
-		);
 
 		mouse.Update(window, h);
 		
@@ -188,14 +170,7 @@ int main() {
 		//txt.Content = "In the beginning, the two nations lived at peace,until the evil forces emerged from the depths of hell";
 		//counter.Content = to_string(deltaTime);
 
-		//renderer.Draw(txt);
-		
-		//renderer.Draw(counter);
-		//renderer.Draw(trig);
-		//renderer.Draw(circ);
-		//cout << click.rect.Transform.Position.y << endl;
-
-		renderer.Render();
+		renderer.Render(proj);
 
 		glfwSwapBuffers(window);
 

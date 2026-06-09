@@ -1,75 +1,60 @@
-#include <iostream>
 #include "TextRenderer.h"
-#include <ft2build.h>
-#include FT_FREETYPE_H
-#include <string>
-#include <map>
 
-Font::Font(const char* txt)
-{
-	FT_Library ft;
+TextRenderer::TextRenderer(Shader& s) 
+	: shader(s), textVBO(&textVertices), textEBO(&textIndices) {
 
-	if (FT_Init_FreeType(&ft)) {
-		std::cout << "Failed to initialize FreeType" << std::endl;
-	}
+	textVAO.Bind();
 
-	FT_Face face;
+	textVBO.Bind();
+	textEBO.Bind();
 
-	if (FT_New_Face(ft, txt, 0, &face)) {
-		std::cout << "Failed to load font" << std::endl;
-	}
+	textVAO.LinkAttrib(textVBO, 0, 2, GL_FLOAT, 7 * sizeof(float), (void*)0);
+	textVAO.LinkAttrib(textVBO, 1, 3, GL_FLOAT, 7 * sizeof(float), (void*)(2 * sizeof(float)));
+	textVAO.LinkAttrib(textVBO, 2, 2, GL_FLOAT, 7 * sizeof(float), (void*)(5 * sizeof(float)));
+	
+	textVAO.Unbind();
+}
 
-	FT_Set_Pixel_Sizes(face, 0, 48);
+void TextRenderer::Render(const glm::mat4& proj) {
 
-	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+	if (textVertices.empty() || textIndices.empty()) return;
 
-	int atlasWidth = 1024;
-	int atlasHeight = 1024;
+	shader.Activate();
 
-	glGenTextures(1, &id);
-	glBindTexture(GL_TEXTURE_2D, id);
+	textVAO.Bind();
+	textVBO.Bind();
+	textEBO.Bind();
 
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, atlasWidth, atlasHeight, 0, GL_RED, GL_UNSIGNED_BYTE, nullptr);
+	glUniformMatrix4fv(
+		glGetUniformLocation(shader.ID, "projection"),
+		1,
+		GL_FALSE,
+		&proj[0][0]
+	);
 
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glBufferData(GL_ARRAY_BUFFER, textVertices.size() * sizeof(GLfloat), textVertices.data(), GL_DYNAMIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, textIndices.size() * sizeof(GLuint), textIndices.data(), GL_DYNAMIC_DRAW);
 
-	int x = 0;
-	int y = 0;
-	int rowHeight = 0;
+	glUniform1i(glGetUniformLocation(shader.ID, "textTexture"), 0);
 
-	for (unsigned char c = 32; c < 128; c++) {
-		FT_Load_Char(face, c, FT_LOAD_RENDER);
+	glDisable(GL_DEPTH_TEST);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-		FT_Bitmap bitmap = face->glyph->bitmap;
 
-		if (x + bitmap.width > atlasWidth) {
-			x = 0;
-			y += rowHeight + 1;
-			rowHeight = 0;
-		}
+	glDrawElements(GL_TRIANGLES, textIndices.size(), GL_UNSIGNED_INT, 0);
+}
 
-		glTexSubImage2D(GL_TEXTURE_2D, 0, x, y, bitmap.width, bitmap.rows, GL_RED, GL_UNSIGNED_BYTE, bitmap.buffer);
+void TextRenderer::Destroy() {
+	
+	textVBO.Delete();
+	textVAO.Delete();
+	textEBO.Delete();
+	shader.Delete();
 
-		rowHeight = std::max(rowHeight, (int)bitmap.rows);
+}
 
-		Character chr;
-		chr.UV1 = { (float)x / atlasWidth,(float)(y + bitmap.rows) / atlasHeight };
-		chr.UV2 = { (float)(x + bitmap.width) / atlasWidth,(float)y / atlasHeight };
-		
-
-		chr.Size = { (signed)bitmap.width,(signed)bitmap.rows };
-		chr.Bearing = { face->glyph->bitmap_left,face->glyph->bitmap_top };
-		chr.Advance = face->glyph->advance.x;
-		lineHeight = face->size->metrics.height >> 6;
-
-		Characters[c] = chr;
-
-		x += bitmap.width + 1;
-	}
-
-	FT_Done_Face(face);
-	FT_Done_FreeType(ft);
+void TextRenderer::ClearBuffers() {
+	textVertices.clear();
+	textIndices.clear();
 }

@@ -4,7 +4,7 @@
 #include <memory>
 
 #include "Object.h"
-#include "UiRenderer.h"
+#include "Ui.h"
 
 class ObjectManager {
 public:

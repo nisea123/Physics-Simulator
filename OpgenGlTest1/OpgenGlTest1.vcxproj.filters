@@ -31,6 +31,24 @@
     <Filter Include="Header Files\Input">
       <UniqueIdentifier>{458d1f2e-38c1-4960-81fe-28bcebd5b12b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Graphics">
+      <UniqueIdentifier>{cd20b07e-604f-48b2-8b96-334338e522f7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Core\Renderer">
+      <UniqueIdentifier>{26d85c8b-a4e6-4c58-8c36-771855e9b2d8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Data">
+      <UniqueIdentifier>{7379ccb6-9f84-48ed-a847-1b1b33764e92}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Renderer">
+      <UniqueIdentifier>{c14ec825-611e-42ce-b44d-27bab3710176}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Shaders\ObjectData">
+      <UniqueIdentifier>{5409c96e-e0d6-4a45-be7a-0fb43a6da9a2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Shaders\TextData">
+      <UniqueIdentifier>{dacc4333-266e-4f93-854e-15610cf59f1a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="glad.c">
@@ -39,22 +57,7 @@
     <ClCompile Include="Main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="shaderClass.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="VBO.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="EBO.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="VAO.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="stb.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Renderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Transform.cpp">
@@ -63,7 +66,7 @@
     <ClCompile Include="RendererDraw.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="TextRenderer.cpp">
+    <ClCompile Include="FontRenderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Object.cpp">
@@ -72,33 +75,37 @@
     <ClCompile Include="ObjectManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="UiRenderer.h">
-      <Filter>Header Files\Core</Filter>
-    </ClCompile>
     <ClCompile Include="UiBuilder.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="default.vert">
-      <Filter>Resource Files\Shaders</Filter>
-    </Text>
+    <ClCompile Include="EBO.cpp">
+      <Filter>Source Files\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="VAO.cpp">
+      <Filter>Source Files\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="VBO.cpp">
+      <Filter>Source Files\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="shaderClass.cpp">
+      <Filter>Source Files\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Ui.h">
+      <Filter>Header Files\Data</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectRenderer.cpp">
+      <Filter>Source Files\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="TextRenderer.cpp">
+      <Filter>Source Files\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer.cpp">
+      <Filter>Source Files\Renderer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Structs.h">
       <Filter>Header Files\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="Object.h">
-      <Filter>Header Files\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="Renderer.h">
-      <Filter>Header Files\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="Transform.h">
-      <Filter>Header Files\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="TextRenderer.h">
-      <Filter>Header Files\Core</Filter>
     </ClInclude>
     <ClInclude Include="ObjectManager.h">
       <Filter>Header Files\Core</Filter>
@@ -124,6 +131,27 @@
     <ClInclude Include="Mouse.h">
       <Filter>Header Files\Input</Filter>
     </ClInclude>
+    <ClInclude Include="ObjectRenderer.h">
+      <Filter>Header Files\Core\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="TextRenderer.h">
+      <Filter>Header Files\Core\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Transform.h">
+      <Filter>Header Files\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Object.h">
+      <Filter>Header Files\Data</Filter>
+    </ClInclude>
+    <ClInclude Include="Text.h">
+      <Filter>Header Files\Data</Filter>
+    </ClInclude>
+    <ClInclude Include="ShapeInstance.h">
+      <Filter>Header Files\Data</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer.h">
+      <Filter>Header Files\Core\Renderer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\..\..\..\Downloads\car.png">
@@ -132,7 +160,18 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="default.frag">
-      <Filter>Resource Files\Shaders</Filter>
+      <Filter>Resource Files\Shaders\ObjectData</Filter>
     </None>
+    <None Include="text.vert">
+      <Filter>Resource Files\Shaders\TextData</Filter>
+    </None>
+    <None Include="text.frag">
+      <Filter>Resource Files\Shaders\TextData</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="default.vert">
+      <Filter>Resource Files\Shaders\ObjectData</Filter>
+    </Text>
   </ItemGroup>
 </Project>

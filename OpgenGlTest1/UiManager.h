@@ -1,15 +1,18 @@
 #pragma once
 
 #include "ObjectManager.h"
-#include "UiRenderer.h"
+#include "Ui.h"
 
 class UiManager
 {
 public:
+	Font font = Font("OpenSans.ttf");
 	ObjectManager& objects;
 	std::vector<std::unique_ptr<UiElement>> ui;
 
-	UiManager(ObjectManager& obj) : objects(obj) {}
+	UiManager(ObjectManager& obj) : objects(obj) {
+		Init();
+	}
 
 	template<typename T, typename... Args>
 	T* SpawnUi(Args&&... args) {

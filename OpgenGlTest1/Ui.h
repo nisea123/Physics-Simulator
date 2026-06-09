@@ -1,7 +1,11 @@
+#pragma once
+
 #include <memory>
+#include <vector>
+#include <functional>
 
 #include "Object.h"
-#include "TextRenderer.h"
+#include "Text.h"
 
 class UiElement
 {
@@ -29,6 +33,10 @@ class UiButton : public UiElement
 public:
 	Text text;
 	bool isChecked = false;
+	UiButton(Font& font, Vec2f size, Vec2f pos) : text(font) {
+		rect = Rectangle(size, pos);
+		text.Transform.Position = Vec2f(pos.x - size.x / 2.f,pos.y + size.y / 2.f);
+	}
 	//to do
 };
 

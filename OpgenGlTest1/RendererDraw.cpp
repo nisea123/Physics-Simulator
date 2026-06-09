@@ -17,59 +17,22 @@ void Renderer::Draw(const Triangle& item) {
 	Vec2f p2 = Transform.Apply({ w,0 });
 	Vec2f p3 = Transform.Apply({ 0,h }); // Getting new values of the points after scaling,rotation and offset
 
-	unsigned int ind = vertices.size() / VERTEX_SIZE;
+	float radius = 0;
 
 	float type = item.ShapeType;
-
-	vertices.insert(vertices.end(), {
-		p1.x, p1.y ,0.0f, r, g, b, 0,0, type,
-		p2.x, p2.y ,0.0f, r ,g ,b, 1,0, type,
-		p3.x, p3.y, 0.0f, r, g, b, 0,1, type
-		});
-	indices.insert(indices.end(), {
-		ind,ind + 1, ind + 2
-		});
 }
 
 void Renderer::Draw(const Rectangle& item) {
 
+	ShapeInstance shapeInstance;
 
-	float w = item.Size.x;
-	float h = item.Size.y;
+	shapeInstance.color = item.Color;
+	shapeInstance.position = item.Transform.Position;
+	shapeInstance.size = item.Size;
+	shapeInstance.radius = item.CornerRadius;
+	shapeInstance.type = item.ShapeType;
 
-	float r = item.Color.r;
-	float g = item.Color.g;
-	float b = item.Color.b;
-
-	Transform Transform = item.Transform;
-
-	unsigned int ind = vertices.size() / VERTEX_SIZE;
-
-	Vec2f p1 = Transform.Apply({ -w / 2,  h / 2 });
-	Vec2f p2 = Transform.Apply({ w / 2,  h / 2 });
-	Vec2f p3 = Transform.Apply({ w / 2, -h / 2 });
-	Vec2f p4 = Transform.Apply({ -w / 2, -h / 2 });
-	
-	float type = item.ShapeType;
-
-	vertices.insert(vertices.end(), {
-		// p1 (left top)
-		p1.x, p1.y, 0.0f,  r,g,b,  0,0, type,
-
-		// p2 (right top)
-		p2.x, p2.y, 0.0f,  r,g,b,  1,0, type,
-
-		// p3 (right bottom)
-		p3.x, p3.y, 0.0f,  r,g,b,  1,1, type,
-
-		// p4 (left bottom)
-		p4.x, p4.y, 0.0f,  r,g,b,  0,1, type
-		});
-
-	indices.insert(indices.end(), {
-		ind, ind + 1, ind + 2,
-		ind, ind + 2, ind + 3
-		});
+	objRenderer.shapeInstances.push_back(shapeInstance);
 }
 
 void Renderer::Draw(const Circle& item) {
@@ -87,34 +50,13 @@ void Renderer::Draw(const Circle& item) {
 
 	Transform Transform = item.Transform;
 
-	unsigned int ind = vertices.size() / VERTEX_SIZE;
 
 	float type = item.ShapeType;
 
 	Vec2f p1 = Transform.Apply({ 0,0 });
 
-	vertices.insert(vertices.end(), {
-		p1.x, p1.y, 0.0f, r, g, b, 0.5,0.5, type
-		});
-
 	int count = 0;
 
-	for (float i = 0; i < 6.28; i += num) {
-		Vec2f p = Transform.Apply({ cos(i) * ra,sin(i) * ra });
-		float u = cos(i) * 0.5f + 0.5f;
-		float v = sin(i) * 0.5f + 0.5f;
-		count++;
-		vertices.insert(vertices.end(), {
-			p.x, p.y , 0.0f, r, g, b, u, v, type
-			});
-	}
-	for (int i = 1; i <= count; i++) {
-		unsigned int current = ind + i;
-		unsigned int next = ind + (i % count) + 1;
-		indices.insert(indices.end(), {
-			ind, current, next
-			});
-	}
 }
 
 void Renderer::Draw(const Text& txt)
@@ -146,28 +88,28 @@ void Renderer::Draw(const Text& txt)
 		float w = ch.Size.x;
 		float h = ch.Size.y;
 
-		unsigned int ind = vertices.size() / VERTEX_SIZE;
-
 		float type = txt.ShapeType;
 
 		float u0 = ch.UV1.x;
 		float v0 = ch.UV1.y;
 		float u1 = ch.UV2.x;
 		float v1 = ch.UV2.y;
-		
-		vertices.insert(vertices.end(), {
-			xpos,     ypos + h, 0, r,g,b, u0, v1, type,
-			xpos,     ypos,     0, r,g,b, u0, v0, type,
-			xpos + w, ypos,     0, r,g,b, u1, v0, type,
-			xpos + w, ypos + h, 0, r,g,b, u1, v1, type
+
+		x += (ch.Advance >> 6);
+
+		unsigned int ind = txtRenderer.textVertices.size() / 7;
+
+		txtRenderer.textVertices.insert(txtRenderer.textVertices.end(), {
+			xpos,     ypos + h, r,g,b, u0, v1,
+			xpos,     ypos,     r,g,b, u0, v0,
+			xpos + w, ypos,     r,g,b, u1, v0,
+			xpos + w, ypos + h, r,g,b, u1, v1
 			});
 
-		indices.insert(indices.end(), {
+		txtRenderer.textIndices.insert(txtRenderer.textIndices.end(), {
 			ind, ind + 1, ind + 2,
 			ind, ind + 2, ind + 3
 			});
-
-		x += (ch.Advance >> 6);
 	}
 
 	glActiveTexture(GL_TEXTURE0); // Activate slot 0
@@ -175,7 +117,20 @@ void Renderer::Draw(const Text& txt)
 
 }
 
-void Renderer::Draw(const UiElement& item) {
+void Renderer::Draw(const UiButton& item) {
+	Draw(item.rect);
+	Draw(item.text);
+}
+
+void Renderer::Draw(const UiFrame& item) {
+	Draw(item.rect);
+}
+
+void Renderer::Draw(const UiSlider& item) {
+	Draw(item.rect);
+}
+
+void Renderer::Draw(const UiText& item) {
 	Draw(item.rect);
 	Draw(item.text);
 }

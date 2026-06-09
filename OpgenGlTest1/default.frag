@@ -1,59 +1,60 @@
 #version 330 core
-in vec3 Color;
-in vec2 UV;
+
+in vec4 Color;
+in vec2 localPos;
 in float shapeType;
+in float Radius;
 
 out vec4 FragColor;
 
 uniform sampler2D textTexture;
 
+vec3 borderColor = vec3(0.0);
+float t = 0.005;
+
+void DrawTriangle();
+void DrawRectangle();
+void DrawCircle();
+void DrawText();
+
+float RoundedRectSDF(vec2 p, vec2 b, float r)
+{
+    vec2 d = abs(p) - (b - vec2(r));
+    return length(max(d, 0.0)) + min(max(d.x, d.y), 0.0) - r;
+}
+
 void main()
 {
-    vec3 borderColor = vec3(0.0, 0.0, 0.0);
-
-    if(shapeType == -1)
+    if(shapeType == 0)
     {
-    float alpha = texture(textTexture, UV).r;
-    FragColor = vec4(Color,alpha);
-    }
-  else if(shapeType == 0)
-    {
-  // triangle (barycentric)
-          float edge = min(min(UV.x, UV.y), 1.0 - UV.x - UV.y);
-
-           float borderSize = fwidth(edge) * 2.0;
-
-        if(edge < borderSize)
-            FragColor = vec4(borderColor, 1.0);
-        else
-            FragColor = vec4(Color, 1.0);
+        DrawText();
     }
     else if(shapeType == 1)
     {
-           // rectangle (UV)
-        float edge = min(min(UV.x, 1.0 - UV.x),
-                         min(UV.y, 1.0 - UV.y));
-
-        float borderSize = fwidth(edge) * 2.0;
-
-        if(edge < borderSize)
-            FragColor = vec4(borderColor, 1.0);
-        else
-            FragColor = vec4(Color, 1.0);
-    
-    } 
-    else if (shapeType == 2)
-    {
-      // circle (radial UV assumed centered)
-        float dist = length(UV * 2.0 - 1.0);
-
-         float edge = 1 - dist;
-         float borderSize = fwidth(edge) * 2.0;
-
-
-        if(edge < borderSize)
-            FragColor = vec4(borderColor, 1.0);
-        else
-            FragColor = vec4(Color, 1.0);
+        DrawTriangle();
     }
+    else if(shapeType == 2)
+    {
+        DrawRectangle();
+    }
+    else if(shapeType == 3)
+    {
+        DrawCircle();
+    }
+}
+
+void DrawText(){
+   float alpha = texture(textTexture, localPos).a;
+   FragColor = vec4(Color.xyz, alpha);
+}
+
+void DrawTriangle(){
+}
+
+void DrawRectangle(){
+   FragColor = Color;
+}
+
+void DrawCircle(){
+     
 }
