@@ -61,4 +61,23 @@ public:
 	bool Contains(Vec2f p) override;
 };
 
+class Line : public Object
+{
+public:
+	Vec2f Start;
+	Vec2f End;
+	float Thickness = 5.f;
+	Line(Vec2f a, Vec2f b,float thick) {
+		Start = a;
+		End = b;
+		Thickness = thick;
+		ShapeType = 4;
+	}
+	Line(Vec2f a, Vec2f b) {
+		Start = a;
+		End = b;
+		ShapeType = 4;
+	}
+	bool Contains(Vec2f p) override;
+};
 #endif

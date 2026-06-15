@@ -1,10 +1,11 @@
 #version 330 core
 
 in vec4 Color;
-in vec2 localPos;
-in vec2 size;
+in vec2 localPos; // Can be used as midPoint for lines
+in vec2 size; // Can be used as lenght and thickness for lines
 in float shapeType;
 in float Radius;
+in float Rotation;
 
 out vec4 FragColor;
 
@@ -12,10 +13,15 @@ uniform sampler2D textTexture;
 
 vec3 borderColor = vec3(0.0);
 
+const float TRIANGLE = 1.0;
+const float RECTANGLE = 2.0;
+const float CIRCLE = 3.0;
+const float LINE = 4.0;
+
 void DrawTriangle();
 void DrawRectangle();
 void DrawCircle();
-void DrawText();
+void DrawLine();
 
 float RoundedRectSDF(vec2 p, vec2 b, float r)
 {
@@ -25,17 +31,21 @@ float RoundedRectSDF(vec2 p, vec2 b, float r)
 
 void main()
 {
-  if(shapeType == 1)
+  if(shapeType == TRIANGLE)
     {
         DrawTriangle();
     }
-    else if(shapeType == 2)
+    else if(shapeType == RECTANGLE)
     {
         DrawRectangle();
     }
-    else if(shapeType == 3)
+    else if(shapeType == CIRCLE)
     {
         DrawCircle();
+    }
+    else if(shapeType == LINE)
+    {
+        DrawLine();
     }
 }
 
@@ -68,4 +78,9 @@ void DrawCircle()
     float alpha = 1.0 - smoothstep(-fwidth(d), fwidth(d), d);
 
     FragColor = vec4(Color.rgb, Color.a * alpha);
+}
+
+void DrawLine()
+{
+   DrawRectangle();
 }

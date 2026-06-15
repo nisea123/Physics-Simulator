@@ -21,6 +21,7 @@ public:
 	void Draw(const Rectangle& item);
 	void Draw(const Circle& item);
 	void Draw(const Triangle& item);
+	void Draw(const Line& item);
 	void Draw(const Text& txt);
 	void Draw(const UiButton& item);
 	void Draw(const UiFrame& item);

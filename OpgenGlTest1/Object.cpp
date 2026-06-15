@@ -24,6 +24,11 @@ bool Rectangle::Contains(Vec2f p)
 bool Circle::Contains(Vec2f p)
 {
 	Vec2f d = { p.x - Transform.Position.x, p.y - Transform.Position.y};
-	return (d.x * d.x + d.y * d.y) <= Radius * Radius;
+	return (d.x * d.x + d.y * d.y) <= Radius * Radius / 4;
+	return false;
+}
+
+bool Line::Contains(Vec2f p)
+{
 	return false;
 }

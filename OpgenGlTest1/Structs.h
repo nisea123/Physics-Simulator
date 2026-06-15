@@ -5,26 +5,14 @@ struct Vec2f
 	float x = 0.0f;
 	float y = 0.0f;
 
-    Vec2f operator-(const Vec2f& other) const
-    {
-        return { x - other.x, y - other.y };
-    }
-
-    Vec2f operator+(const Vec2f& other) const
-    {
-        return { x + other.x, y + other.y };
-    }
-
-    Vec2f operator*(float s) const
-    {
-        return { x * s, y * s };
-    }
-
-    Vec2f operator/(float s) const
-    {
-        return { x / s, y / s };
-    }
 };
+
+
+Vec2f operator+(Vec2f a, Vec2f b);
+Vec2f operator-(Vec2f a, Vec2f b);
+Vec2f operator*(Vec2f v, float s);
+float Length(Vec2f v);
+Vec2f Normalize(Vec2f v);
 
 struct Vec2i {
 	int x = 0;

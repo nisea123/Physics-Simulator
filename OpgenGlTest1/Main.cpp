@@ -72,6 +72,7 @@ int main() {
 	Scene scene;
 
 	scene.objects.SpawnWorld<Circle>(400.f,Vec2f{ width / 2.f, height / 2.f });
+	Line* line = scene.objects.SpawnWorld<Line>(Vec2f(0, 0), Vec2f(width / 2.f, height / 2.f));
 		
 	float i = 0;
 
@@ -100,6 +101,7 @@ int main() {
 
 		mouse.Update(window, h);
 		
+		line->Start = mouse.position;
 		hoveredObject = nullptr;
 		hoveredUi = nullptr;
 
@@ -150,9 +152,10 @@ int main() {
 
 			else if (auto* c = dynamic_cast<Circle*>(o))
 				renderer.Draw(*c);
-
 			else if (auto* t = dynamic_cast<Triangle*>(o))
 				renderer.Draw(*t);
+			else if (auto* p = dynamic_cast<Line*>(o))
+				renderer.Draw(*p);
 		}
 		for (auto& object : scene.ui.ui) {
 			UiElement* o = object.get();

@@ -33,7 +33,11 @@ ObjectRenderer::ObjectRenderer(Shader& s)
 		(void*)offsetof(ShapeInstance, radius));
 
 	objVAO.LinkInstanceAttrib(instanceVBO, 5, 1, GL_FLOAT, sizeof(ShapeInstance),
+		(void*)offsetof(ShapeInstance, rotation));
+
+	objVAO.LinkInstanceAttrib(instanceVBO, 6, 1, GL_FLOAT, sizeof(ShapeInstance),
 		(void*)offsetof(ShapeInstance, type));
+
 
 	objVAO.Unbind();
 

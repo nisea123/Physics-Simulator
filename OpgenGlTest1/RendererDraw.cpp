@@ -31,6 +31,7 @@ void Renderer::Draw(const Rectangle& item) {
 	shapeInstance.size = item.Size;
 	shapeInstance.radius = item.CornerRadius;
 	shapeInstance.type = item.ShapeType;
+	shapeInstance.rotation = item.Transform.Rotation;
 
 	objRenderer.shapeInstances.push_back(shapeInstance);
 }
@@ -43,6 +44,26 @@ void Renderer::Draw(const Circle& item) {
 	shapeInstance.position = item.Transform.Position;
 	shapeInstance.size = Vec2f(item.Radius,item.Radius);
 	shapeInstance.radius = item.Radius;
+	shapeInstance.type = item.ShapeType;
+
+	objRenderer.shapeInstances.push_back(shapeInstance);
+}
+
+void Renderer::Draw(const Line& item) {
+
+	ShapeInstance shapeInstance;
+
+	Vec2f dir = Normalize(item.End - item.Start);
+	float len = Length(item.End - item.Start);
+
+	Vec2f midPoint = (item.Start + item.End) * .5;
+	Vec2f size = { len,item.Thickness };
+	float angle = atan2(dir.y, dir.x);
+
+	shapeInstance.position = midPoint;
+	shapeInstance.size = size;
+	shapeInstance.rotation = angle;
+	shapeInstance.color = item.Color;
 	shapeInstance.type = item.ShapeType;
 
 	objRenderer.shapeInstances.push_back(shapeInstance);
