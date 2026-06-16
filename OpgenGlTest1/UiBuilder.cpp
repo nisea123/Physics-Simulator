@@ -17,7 +17,6 @@ void UiManager::Init() {
 	spawnBlocks->OnClick = [=, this]() 
 		{
 			Rectangle* obj = objects.SpawnWorld<Rectangle>(Vec2f(100.f, 100.f), Vec2f(width / 2.f, height / 2.f));
-			obj->Transform.Rotation = asinf(.5f);
 		};
 
 	UiButton* spawnCircle = SpawnUi<UiButton>(font, Vec2f(300.f, 100.f), Vec2f(width / 2.f, height / 1.25f));

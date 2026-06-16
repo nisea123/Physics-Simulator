@@ -32,3 +32,8 @@ bool Line::Contains(Vec2f p)
 {
 	return false;
 }
+
+bool Arrow::Contains(Vec2f p) 
+{
+	return false;
+}

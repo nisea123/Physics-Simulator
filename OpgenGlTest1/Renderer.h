@@ -22,6 +22,8 @@ public:
 	void Draw(const Circle& item);
 	void Draw(const Triangle& item);
 	void Draw(const Line& item);
+	void Draw(const Line& item, float trimmed);
+	void Draw(const Arrow& item);
 	void Draw(const Text& txt);
 	void Draw(const UiButton& item);
 	void Draw(const UiFrame& item);
@@ -35,4 +37,5 @@ public:
 private:
 	void ClearScreen(); // Clearing screen
 	void ClearBuffers(); // Clearing vertices and indices
+	void DrawArrowHead(const Arrow& item);
 };

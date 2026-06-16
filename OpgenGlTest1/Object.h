@@ -80,4 +80,18 @@ public:
 	}
 	bool Contains(Vec2f p) override;
 };
+
+class Arrow : public Line
+{
+public:
+	float ArrowWidth = 3.f;
+	float ArrowHeight = 4.f;
+	Arrow(Vec2f a, Vec2f b,float thick) : Line(a,b,thick){
+		ShapeType = 5;
+	}
+	Arrow(Vec2f a, Vec2f b) : Line(a, b) {
+		ShapeType = 5;
+	}
+	bool Contains(Vec2f p) override;
+};
 #endif

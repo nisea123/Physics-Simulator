@@ -172,6 +172,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="EBO.h" />
+    <ClInclude Include="Gizmo.h" />
     <ClInclude Include="Mouse.h" />
     <ClInclude Include="Object.h" />
     <ClInclude Include="ObjectManager.h" />

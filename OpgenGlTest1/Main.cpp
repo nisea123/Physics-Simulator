@@ -72,7 +72,7 @@ int main() {
 	Scene scene;
 
 	scene.objects.SpawnWorld<Circle>(400.f,Vec2f{ width / 2.f, height / 2.f });
-	Line* line = scene.objects.SpawnWorld<Line>(Vec2f(0, 0), Vec2f(width / 2.f, height / 2.f));
+	Arrow* arrow = scene.objects.SpawnWorld<Arrow>(Vec2f(0, 0), Vec2f(width / 2.f, height / 2.f), 20);
 		
 	float i = 0;
 
@@ -101,7 +101,7 @@ int main() {
 
 		mouse.Update(window, h);
 		
-		line->Start = mouse.position;
+		//arrow->End = mouse.position;
 		hoveredObject = nullptr;
 		hoveredUi = nullptr;
 
@@ -127,7 +127,6 @@ int main() {
 		{
 			if (hoveredUi) {
 				if (hoveredUi->OnClick) {
-					cout << "Clicked" << endl;
 					hoveredUi->OnClick();
 				}
 			}
@@ -136,10 +135,23 @@ int main() {
 				mouse.dragOffset = mouse.position - selectedObject->Transform.Position;
 			}
 		}
+
+		if (selectedObject) {
+			float lenght = 100;
+			Vec2f pos = selectedObject->Transform.Position;
+			if (Rectangle* rectangle = dynamic_cast<Rectangle*>(selectedObject)) {
+				Vec2f size = rectangle->Size;
+				Arrow* arrow1 = scene.objects.SpawnWorld<Arrow>(Vec2f(pos.x - size.x / 2.f, pos.y), Vec2f(pos.x - lenght - size.x / 2.f, pos.y), 10.f);
+				Arrow* arrow2 = scene.objects.SpawnWorld<Arrow>(Vec2f(pos.x,pos.y + size.y/ 2.f), Vec2f(pos.x, pos.y + lenght + size.y / 2.f), 10.f);
+				Arrow* arrow3 = scene.objects.SpawnWorld<Arrow>(Vec2f(pos.x + size.x / 2.f, pos.y), Vec2f(pos.x + lenght + size.x / 2.f, pos.y), 10.f);
+				Arrow* arrow4 = scene.objects.SpawnWorld<Arrow>(Vec2f(pos.x, pos.y - size.y / 2.f), Vec2f(pos.x, pos.y - lenght - size.y / 2.f), 10.f);
+			}
+		}
 		
 		if(mouse.m1 && selectedObject){
 			selectedObject->Transform.Position = mouse.position - mouse.dragOffset;
 		}
+
 
 		if (!mouse.m1) {
 			selectedObject = nullptr;
@@ -154,6 +166,8 @@ int main() {
 				renderer.Draw(*c);
 			else if (auto* t = dynamic_cast<Triangle*>(o))
 				renderer.Draw(*t);
+			else if (auto* n = dynamic_cast<Arrow*>(o))
+				renderer.Draw(*n);
 			else if (auto* p = dynamic_cast<Line*>(o))
 				renderer.Draw(*p);
 		}

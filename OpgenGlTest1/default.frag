@@ -17,11 +17,13 @@ const float TRIANGLE = 1.0;
 const float RECTANGLE = 2.0;
 const float CIRCLE = 3.0;
 const float LINE = 4.0;
+const float HEAD = 5.0;
 
 void DrawTriangle();
 void DrawRectangle();
 void DrawCircle();
 void DrawLine();
+void DrawHead();
 
 float RoundedRectSDF(vec2 p, vec2 b, float r)
 {
@@ -46,6 +48,10 @@ void main()
     else if(shapeType == LINE)
     {
         DrawLine();
+    }
+    else if(shapeType == HEAD) // Draws the tip of the arrow
+    {
+        DrawHead();
     }
 }
 
@@ -83,4 +89,27 @@ void DrawCircle()
 void DrawLine()
 {
    DrawRectangle();
+}
+
+float sdTriangleIsosceles( in vec2 p, in vec2 q )
+{
+    p.x = abs(p.x);
+	vec2 a = p - q*clamp( dot(p,q)/dot(q,q), 0.0, 1.0 );
+    vec2 b = p - q*vec2( clamp( p.x/q.x, 0.0, 1.0 ), 1.0 );
+    float k = sign( q.y );
+    float d = min(dot( a, a ),dot(b, b));
+    float s = max( k*(p.x*q.y-p.y*q.x),k*(p.y-q.y)  );
+	return sqrt(d)*sign(s);
+}
+
+void DrawHead()
+{
+    vec2 p = (localPos - vec2(0.5));
+    p = vec2(p.y,-p.x);
+
+    float d = sdTriangleIsosceles(p,vec2(1.0));
+
+    float alpha = 1.0 - smoothstep(-fwidth(d), fwidth(d), d);
+
+    FragColor = vec4(Color.rgb, Color.a * alpha);   
 }

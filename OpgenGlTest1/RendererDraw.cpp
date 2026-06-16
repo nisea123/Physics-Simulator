@@ -64,9 +64,57 @@ void Renderer::Draw(const Line& item) {
 	shapeInstance.size = size;
 	shapeInstance.rotation = angle;
 	shapeInstance.color = item.Color;
+	shapeInstance.type = 4;
+	shapeInstance.radius = 0;
+
+	objRenderer.shapeInstances.push_back(shapeInstance);
+}
+
+void Renderer::Draw(const Line& item, float trimmed) {
+	ShapeInstance shapeInstance;
+
+	Vec2f dir = Normalize(item.End - item.Start);
+
+	float len = Length(item.End - item.Start) - trimmed;
+
+	Vec2f midPoint = item.Start + dir * (len * 0.5f + trimmed * 0.5f);
+	Vec2f size = { len,item.Thickness };
+	float angle = atan2(dir.y, dir.x);
+
+	shapeInstance.position = midPoint;
+	shapeInstance.size = size;
+	shapeInstance.rotation = angle;
+	shapeInstance.color = item.Color;
+	shapeInstance.type = 4;
+	shapeInstance.radius = 0;
+
+	objRenderer.shapeInstances.push_back(shapeInstance);
+}
+
+void Renderer::Draw(const Arrow& item) {
+	float trimmed = item.Thickness * item.ArrowHeight;
+
+	DrawArrowHead(item);
+	Draw(static_cast<const Line&>(item),trimmed);
+	
+}
+
+void Renderer::DrawArrowHead(const Arrow& item) {
+	float arrowHeight = item.Thickness * item.ArrowHeight;
+	float arrowWidth = item.Thickness * item.ArrowWidth;
+	Vec2f tipPos = item.End;
+	Vec2f dir = Normalize(item.End - item.Start);
+	
+	ShapeInstance shapeInstance;
+
+	shapeInstance.position = tipPos;
+	shapeInstance.size = { arrowHeight,arrowWidth };
+	shapeInstance.rotation = atan2(dir.y, dir.x);
+	shapeInstance.color = item.Color;
 	shapeInstance.type = item.ShapeType;
 
 	objRenderer.shapeInstances.push_back(shapeInstance);
+
 }
 
 void Renderer::Draw(const Text& txt)
