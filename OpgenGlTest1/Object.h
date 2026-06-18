@@ -9,6 +9,7 @@ class Object
 public:
 	Transform Transform;
 	Color Color;
+	bool Visible = true;
 	float ShapeType = 0;
 
 	void OnDrag(Vec2f delta) {
@@ -64,8 +65,8 @@ public:
 class Line : public Object
 {
 public:
-	Vec2f Start;
-	Vec2f End;
+	Vec2f Start = Vec2f(0,0);
+	Vec2f End = Vec2f(0,1);
 	float Thickness = 5.f;
 	Line(Vec2f a, Vec2f b,float thick) {
 		Start = a;
@@ -78,6 +79,7 @@ public:
 		End = b;
 		ShapeType = 4;
 	}
+	Line() {}
 	bool Contains(Vec2f p) override;
 };
 
@@ -92,6 +94,7 @@ public:
 	Arrow(Vec2f a, Vec2f b) : Line(a, b) {
 		ShapeType = 5;
 	}
+	Arrow() {}
 	bool Contains(Vec2f p) override;
 };
 #endif

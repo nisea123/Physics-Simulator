@@ -100,7 +100,7 @@ int main() {
 		//glBindTexture(GL_TEXTURE_2D, atlas);
 
 		mouse.Update(window, h);
-		
+		arrow->Visible = !arrow->Visible;
 		//arrow->End = mouse.position;
 		hoveredObject = nullptr;
 		hoveredUi = nullptr;
@@ -158,6 +158,8 @@ int main() {
 		}
 		for (auto& object : scene.objects.objects) {
 			Object* o = object.get();
+
+			if (!o->Visible) continue;
 
 			if (auto* r = dynamic_cast<Rectangle*>(o))
 				renderer.Draw(*r);
