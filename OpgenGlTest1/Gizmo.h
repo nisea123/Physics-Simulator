@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <memory>
 
 #include "Object.h"
 #include "ShapeInstance.h"
@@ -14,24 +15,29 @@ enum class GizmoHandleType
 
 struct GizmoHandle
 {
-	Object* Visual;
+	std::unique_ptr<Object> Visual;
 	GizmoHandleType Type;
 	Vec2f Axis;
 
-	GizmoHandle(Object* vis, GizmoHandleType typ, Vec2f ax) : Visual(vis), Type(typ), Axis(ax) {};
+	GizmoHandle(std::unique_ptr<Object> obj, GizmoHandleType t, Vec2f ax) : Visual(std::move(obj)), Type(t), Axis(ax) {};
 };
 
 class Gizmo
 {
 public:
 
+	std::vector<GizmoHandle> handles;
+	Object* target;
+	float length = 100;
+
 	Gizmo() {
 		Init();
 	}
 
-	std::vector<GizmoHandle> handles;
-
 	void Show();
 	void Hide();
+	
+
+private:
 	void Init();
 };

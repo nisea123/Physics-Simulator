@@ -100,7 +100,7 @@ int main() {
 		//glBindTexture(GL_TEXTURE_2D, atlas);
 
 		mouse.Update(window, h);
-		arrow->Visible = !arrow->Visible;
+		//arrow->Visible = !arrow->Visible;
 		//arrow->End = mouse.position;
 		hoveredObject = nullptr;
 		hoveredUi = nullptr;
@@ -123,7 +123,7 @@ int main() {
 			}
 		}
 
-		if (mouse.m1Pressed)
+		if (mouse.m1Pressed && !selectedObject)
 		{
 			if (hoveredUi) {
 				if (hoveredUi->OnClick) {
@@ -135,27 +135,23 @@ int main() {
 				mouse.dragOffset = mouse.position - selectedObject->Transform.Position;
 			}
 		}
-
-		if (selectedObject) {
-			float lenght = 100;
-			Vec2f pos = selectedObject->Transform.Position;
-			if (Rectangle* rectangle = dynamic_cast<Rectangle*>(selectedObject)) {
-				Vec2f size = rectangle->Size;
-				Arrow* arrow1 = scene.objects.SpawnWorld<Arrow>(Vec2f(pos.x - size.x / 2.f, pos.y), Vec2f(pos.x - lenght - size.x / 2.f, pos.y), 10.f);
-				Arrow* arrow2 = scene.objects.SpawnWorld<Arrow>(Vec2f(pos.x,pos.y + size.y/ 2.f), Vec2f(pos.x, pos.y + lenght + size.y / 2.f), 10.f);
-				Arrow* arrow3 = scene.objects.SpawnWorld<Arrow>(Vec2f(pos.x + size.x / 2.f, pos.y), Vec2f(pos.x + lenght + size.x / 2.f, pos.y), 10.f);
-				Arrow* arrow4 = scene.objects.SpawnWorld<Arrow>(Vec2f(pos.x, pos.y - size.y / 2.f), Vec2f(pos.x, pos.y - lenght - size.y / 2.f), 10.f);
-			}
-		}
 		
 		if(mouse.m1 && selectedObject){
 			selectedObject->Transform.Position = mouse.position - mouse.dragOffset;
 		}
 
+		if (selectedObject) {
+			scene.gizmo.target = selectedObject;
+			scene.gizmo.Show();
+		}
+		else {
+			scene.gizmo.Hide();
+		}
 
 		if (!mouse.m1) {
 			selectedObject = nullptr;
 		}
+
 		for (auto& object : scene.objects.objects) {
 			Object* o = object.get();
 
@@ -176,6 +172,8 @@ int main() {
 		for (auto& object : scene.ui.ui) {
 			UiElement* o = object.get();
 
+			if (!o->Visible) continue;
+
 			if (auto* r = dynamic_cast<UiFrame*>(o))
 				renderer.Draw(*r);
 			else if (auto* c = dynamic_cast<UiButton*>(o))
@@ -184,6 +182,17 @@ int main() {
 				renderer.Draw(*t);
 			else if (auto* y = dynamic_cast<UiText*>(o))
 				renderer.Draw(*y);
+		}
+
+		for (GizmoHandle& handle : scene.gizmo.handles) {
+			Object* o = handle.Visual.get();
+
+			if (!o->Visible) continue;
+
+			if (auto* arrow = dynamic_cast<Arrow*>(o)) {
+				renderer.Draw(*arrow);
+			}
+
 		}
 
 		//txt.Content = "In the beginning, the two nations lived at peace,until the evil forces emerged from the depths of hell";
