@@ -74,10 +74,14 @@ void Renderer::Draw(const Line& item, float trimmed) {
 	ShapeInstance shapeInstance;
 
 	Vec2f dir = Normalize(item.End - item.Start);
+	Vec2f start = item.Start;
+	Vec2f end = item.End - dir * (trimmed * 0.5f);
 
-	float len = Length(item.End - item.Start) - trimmed;
+	Vec2f delta = end - start;
 
-	Vec2f midPoint = item.Start + dir * (len * 0.5f + trimmed * 0.5f);
+	float len = Length(delta);
+	Vec2f midPoint = start + dir * (len * 0.5f);
+
 	Vec2f size = { len,item.Thickness };
 	float angle = atan2(dir.y, dir.x);
 
@@ -92,7 +96,7 @@ void Renderer::Draw(const Line& item, float trimmed) {
 }
 
 void Renderer::Draw(const Arrow& item) {
-	float trimmed = item.Thickness * item.ArrowHeight;
+	float trimmed = item.ArrowHeight + 10.f;
 
 	DrawArrowHead(item);
 	Draw(static_cast<const Line&>(item),trimmed);

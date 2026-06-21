@@ -4,6 +4,7 @@
 #include "ObjectRenderer.h"
 #include "TextRenderer.h"
 #include "Object.h"
+#include "ObjectData.h"
 #include "Ui.h"
 
 #include <glm/glm.hpp>
@@ -29,6 +30,8 @@ public:
 	void Draw(const UiFrame& item);
 	void Draw(const UiSlider& item);
 	void Draw(const UiText& item);
+
+	void DrawArrow(ArrowDesc& desc);
 
 	void Render(const glm::mat4& proj); // Drawing the stuff on the screen
 	void Clear();

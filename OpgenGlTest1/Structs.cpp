@@ -29,3 +29,7 @@ Vec2f Normalize(Vec2f v)
 
     return { v.x / len, v.y / len };
 }
+
+float Dot(Vec2f a, Vec2f b) {
+    return a.x * b.x + a.y + b.y;
+}

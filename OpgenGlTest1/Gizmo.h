@@ -29,6 +29,8 @@ public:
 	std::vector<GizmoHandle> handles;
 	Object* target;
 	float length = 100;
+	float thickness = 7;
+	float trim = 10;
 
 	Gizmo() {
 		Init();

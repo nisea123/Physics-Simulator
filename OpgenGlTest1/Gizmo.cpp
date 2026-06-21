@@ -17,12 +17,15 @@ void Gizmo::Show() {
 	if (Rectangle* rect = dynamic_cast<Rectangle*>(target)) {
 		Vec2f pos = rect->Transform.Position;
 		Vec2f size = rect->Size;
+		Vec2f middle = size * .5f;
 			for (GizmoHandle& handle : handles) {
 				if (Arrow* arr = dynamic_cast<Arrow*>(handle.Visual.get())) {
 					Vec2f axis = handle.Axis;
-					Vec2f orientation = (size * .5f);
-					arr->Start = Vec2f(pos.x + orientation.x * axis.x, pos.y + orientation.y * axis.y);
-					arr->End = Vec2f(pos.x + (orientation.x + length) * axis.x, pos.y + (orientation.y + length) * axis.y);
+					Vec2f newStart = Vec2f((middle.x + trim) * axis.x, (middle.y + trim) * axis.y);
+					Vec2f newEnd = newStart + Vec2f(length * axis.x, length * axis.y);
+					arr->Start = pos + newStart;
+					arr->End = pos + newEnd;
+					arr->Thickness = thickness;
 					arr->Visible = true;
 				 }
 			}

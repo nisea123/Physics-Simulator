@@ -13,6 +13,7 @@ Vec2f operator-(Vec2f a, Vec2f b);
 Vec2f operator*(Vec2f v, float s);
 float Length(Vec2f v);
 Vec2f Normalize(Vec2f v);
+float Dot(Vec2f a, Vec2f b);
 
 struct Vec2i {
 	int x = 0;

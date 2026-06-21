@@ -151,8 +151,10 @@
     <ClCompile Include="EBO.cpp" />
     <ClCompile Include="Gizmo.cpp" />
     <ClCompile Include="glad.c" />
+    <ClCompile Include="InstaDraw.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="MouseCollision.cpp" />
+    <ClCompile Include="ObjectData.cpp" />
     <ClCompile Include="ObjectManager.cpp" />
     <ClCompile Include="ObjectRenderer.cpp" />
     <ClCompile Include="Renderer.cpp" />
@@ -175,6 +177,7 @@
     <ClInclude Include="Gizmo.h" />
     <ClInclude Include="Mouse.h" />
     <ClInclude Include="Object.h" />
+    <ClInclude Include="ObjectData.h" />
     <ClInclude Include="ObjectManager.h" />
     <ClInclude Include="ObjectRenderer.h" />
     <ClInclude Include="Renderer.h" />

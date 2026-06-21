@@ -94,7 +94,9 @@ public:
 	Arrow(Vec2f a, Vec2f b) : Line(a, b) {
 		ShapeType = 5;
 	}
-	Arrow() {}
+	Arrow() {
+		ShapeType = 5;
+	}
 	bool Contains(Vec2f p) override;
 };
 #endif

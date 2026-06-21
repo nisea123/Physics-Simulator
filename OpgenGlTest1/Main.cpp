@@ -73,6 +73,7 @@ int main() {
 
 	scene.objects.SpawnWorld<Circle>(400.f,Vec2f{ width / 2.f, height / 2.f });
 	Arrow* arrow = scene.objects.SpawnWorld<Arrow>(Vec2f(0, 0), Vec2f(width / 2.f, height / 2.f), 20);
+	//Arrow* arrow1 = scene.objects.SpawnWorld<Arrow>(Vec2f(width, height), Vec2f(width / 2.f, height / 2.f), 200);
 		
 	float i = 0;
 
@@ -81,9 +82,13 @@ int main() {
 	float deltaTime = chrono::duration<float>(now - last).count();
 
 	Object* selectedObject = nullptr;
+	Object* holdingObject = nullptr;
 	Object* hoveredObject = nullptr;
 
 	UiElement* hoveredUi = nullptr;
+
+	Object* holdingGizmo = nullptr;
+	Object* hoveredGizmo = nullptr;
 
 	bool checked = false;
 
@@ -104,6 +109,7 @@ int main() {
 		//arrow->End = mouse.position;
 		hoveredObject = nullptr;
 		hoveredUi = nullptr;
+		hoveredGizmo = nullptr;
 
 		for (auto& ui : scene.ui.ui)
 		{
@@ -119,11 +125,19 @@ int main() {
 				if (object->Contains(mouse.position))
 				{
 					hoveredObject = object.get();
+					break;
+				}
+			}
+			for (GizmoHandle& handle : scene.gizmo.handles) {
+				Object* o = handle.Visual.get();
+				if (o->Contains(mouse.position)) {
+					hoveredGizmo = o;
+					
 				}
 			}
 		}
 
-		if (mouse.m1Pressed && !selectedObject)
+		if (mouse.m1Pressed)
 		{
 			if (hoveredUi) {
 				if (hoveredUi->OnClick) {
@@ -132,12 +146,16 @@ int main() {
 			}
 			else if (hoveredObject) {
 				selectedObject = hoveredObject;
-				mouse.dragOffset = mouse.position - selectedObject->Transform.Position;
+				holdingObject = hoveredObject;
+				mouse.dragOffset = mouse.position - holdingObject->Transform.Position;
+			}
+			else if (!hoveredObject && !hoveredGizmo) {
+				selectedObject = nullptr;
 			}
 		}
 		
-		if(mouse.m1 && selectedObject){
-			selectedObject->Transform.Position = mouse.position - mouse.dragOffset;
+		if(mouse.m1 && holdingObject){
+			holdingObject->Transform.Position = mouse.position - mouse.dragOffset;
 		}
 
 		if (selectedObject) {
@@ -149,7 +167,14 @@ int main() {
 		}
 
 		if (!mouse.m1) {
-			selectedObject = nullptr;
+			holdingObject = nullptr;
+		}
+
+		if (hoveredGizmo) {
+			if (Arrow* arr = dynamic_cast<Arrow*>(hoveredGizmo)) {
+				ArrowDesc desc = toArrowDesc(arr, arr->Thickness * 1.5f);
+				renderer.DrawArrow(desc);
+			}
 		}
 
 		for (auto& object : scene.objects.objects) {
