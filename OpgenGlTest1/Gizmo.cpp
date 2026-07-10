@@ -2,6 +2,7 @@
 
 #include "Gizmo.h"
 #include "Object.h"
+#include "Transform.h"
 
 void Gizmo::Init() {
 	// Adding move arrows
@@ -18,13 +19,14 @@ void Gizmo::Show() {
 		Vec2f pos = rect->Transform.Position;
 		Vec2f size = rect->Size;
 		Vec2f middle = size * .5f;
+		Transform transform = rect->Transform;
 			for (GizmoHandle& handle : handles) {
 				if (Arrow* arr = dynamic_cast<Arrow*>(handle.Visual.get())) {
 					Vec2f axis = handle.Axis;
 					Vec2f newStart = Vec2f((middle.x + trim) * axis.x, (middle.y + trim) * axis.y);
 					Vec2f newEnd = newStart + Vec2f(length * axis.x, length * axis.y);
-					arr->Start = pos + newStart;
-					arr->End = pos + newEnd;
+					arr->Start = transform.RotatePoint(newStart,transform.Rotation) + pos;
+					arr->End = transform.RotatePoint(newEnd,transform.Rotation) + pos;
 					arr->Thickness = thickness;
 					arr->Visible = true;
 				 }

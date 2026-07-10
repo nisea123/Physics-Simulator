@@ -13,4 +13,4 @@ struct ArrowDesc {
 	Color Color;
 };
 
-ArrowDesc toArrowDesc(const Arrow* object, float newThickness);
+//ArrowDesc toArrowDesc(const Arrow* object, float newThickness);

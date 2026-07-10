@@ -154,11 +154,13 @@
     <ClCompile Include="InstaDraw.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="MouseCollision.cpp" />
+    <ClCompile Include="Object.cpp" />
     <ClCompile Include="ObjectData.cpp" />
     <ClCompile Include="ObjectManager.cpp" />
     <ClCompile Include="ObjectRenderer.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="RendererDraw.cpp" />
+    <ClCompile Include="Scene.cpp" />
     <ClCompile Include="shaderClass.cpp" />
     <ClCompile Include="FontRenderer.cpp" />
     <ClCompile Include="Structs.cpp" />
@@ -175,8 +177,10 @@
   <ItemGroup>
     <ClInclude Include="EBO.h" />
     <ClInclude Include="Gizmo.h" />
+    <ClInclude Include="Math.h" />
     <ClInclude Include="Mouse.h" />
     <ClInclude Include="Object.h" />
+    <ClInclude Include="ObjectCast.h" />
     <ClInclude Include="ObjectData.h" />
     <ClInclude Include="ObjectManager.h" />
     <ClInclude Include="ObjectRenderer.h" />

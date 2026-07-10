@@ -18,7 +18,7 @@ void Renderer::DrawArrow(ArrowDesc& desc) {
 	head.size = { arrowHeight,arrowWidth };
 	head.rotation = atan2(dir.y, dir.x);
 	head.color = desc.Color;
-	head.type = 5;
+	head.type = static_cast<float>(ObjectType::Arrow);
 
 	objRenderer.shapeInstances.push_back(head);
 
@@ -41,7 +41,7 @@ void Renderer::DrawArrow(ArrowDesc& desc) {
 	shaft.size = size;
 	shaft.rotation = angle;
 	shaft.color = desc.Color;
-	shaft.type = 4;
+	shaft.type = static_cast<float>(ObjectType::Line);
 	shaft.radius = 0;
 
 	objRenderer.shapeInstances.push_back(shaft);

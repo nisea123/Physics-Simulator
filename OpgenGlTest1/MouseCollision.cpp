@@ -44,7 +44,7 @@ bool Line::Contains(Vec2f p)
 
 	Vec2f closest = Start + ab * t;
 
-	return Length(p - closest) <= Thickness * 1.1f;
+	return Length(p - closest) <= Thickness;
 }
 
 bool Arrow::Contains(Vec2f p) 

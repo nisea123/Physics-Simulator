@@ -19,7 +19,7 @@ void Renderer::Draw(const Triangle& item) {
 
 	float radius = 0;
 
-	float type = item.ShapeType;
+	ObjectType type = item.ShapeType;
 }
 
 void Renderer::Draw(const Rectangle& item) {
@@ -30,8 +30,8 @@ void Renderer::Draw(const Rectangle& item) {
 	shapeInstance.position = item.Transform.Position;
 	shapeInstance.size = item.Size;
 	shapeInstance.radius = item.CornerRadius;
-	shapeInstance.type = item.ShapeType;
-	shapeInstance.rotation = item.Transform.Rotation;
+	shapeInstance.type = static_cast<float>(item.ShapeType);
+	shapeInstance.rotation = item.Transform.Rotation.AsRadians();
 
 	objRenderer.shapeInstances.push_back(shapeInstance);
 }
@@ -44,7 +44,7 @@ void Renderer::Draw(const Circle& item) {
 	shapeInstance.position = item.Transform.Position;
 	shapeInstance.size = Vec2f(item.Radius,item.Radius);
 	shapeInstance.radius = item.Radius;
-	shapeInstance.type = item.ShapeType;
+	shapeInstance.type = static_cast<float>(item.ShapeType);
 
 	objRenderer.shapeInstances.push_back(shapeInstance);
 }
@@ -64,7 +64,7 @@ void Renderer::Draw(const Line& item) {
 	shapeInstance.size = size;
 	shapeInstance.rotation = angle;
 	shapeInstance.color = item.Color;
-	shapeInstance.type = 4;
+	shapeInstance.type = static_cast<float>(ObjectType::Line);
 	shapeInstance.radius = 0;
 
 	objRenderer.shapeInstances.push_back(shapeInstance);
@@ -89,7 +89,7 @@ void Renderer::Draw(const Line& item, float trimmed) {
 	shapeInstance.size = size;
 	shapeInstance.rotation = angle;
 	shapeInstance.color = item.Color;
-	shapeInstance.type = 4;
+	shapeInstance.type = static_cast<float>(ObjectType::Line);
 	shapeInstance.radius = 0;
 
 	objRenderer.shapeInstances.push_back(shapeInstance);
@@ -115,7 +115,7 @@ void Renderer::DrawArrowHead(const Arrow& item) {
 	shapeInstance.size = { arrowHeight,arrowWidth };
 	shapeInstance.rotation = atan2(dir.y, dir.x);
 	shapeInstance.color = item.Color;
-	shapeInstance.type = item.ShapeType;
+	shapeInstance.type = static_cast<float>(item.ShapeType);
 
 	objRenderer.shapeInstances.push_back(shapeInstance);
 
