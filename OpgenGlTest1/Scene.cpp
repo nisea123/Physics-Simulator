@@ -96,6 +96,7 @@ void Scene::UpdateSelection(Mouse& mouse) {
 		else if (hoveredHandle) {
 			holdingHandle = hoveredHandle;
 			holdingHandle->MouseStartPosition = mouse.position;
+			holdingHandle->GizmoStartAngle = holdingObject->Transform.Rotation;
 		}
 	}
 }
@@ -123,31 +124,47 @@ void Scene::UpdateGizmo(Mouse& mouse) {
 
 	if (hoveredHandle) {
 
-
+		if (hoveredHandle->Type == GizmoHandleType::Move) {
 		if (Arrow* arr = As<Arrow>(hoveredHandle->Visual.get())) {
 			arr->Thickness = gizmo.thickness * 1.5f;
 		}
+		}
+			if(hoveredHandle->Type == GizmoHandleType::Rotate){
+				if (Arc* arc = As<Arc>(hoveredHandle->Visual.get())) {
+					arc->Radius = gizmo.arcRadius * 1.2f;
+				}
+		} 
+
 		lastHoveredHandle = hoveredHandle;
 	}
 
-
-
 	if (holdingHandle && mouse.m1) {
 
-		if (Arrow* arr = As<Arrow>(holdingHandle->Visual.get())) {
-			arr->Thickness = gizmo.thickness * 1.5f;
-		}
+		if (holdingHandle->Type == GizmoHandleType::Move) {
+			if (Arrow* arr = As<Arrow>(holdingHandle->Visual.get())) {
+				arr->Thickness = gizmo.thickness * 1.5f;
+			}
 
-		Vec2f axis = holdingHandle->Axis;
-		Vec2f offset = holdingHandle->MouseStartPosition - mouse.position;
-		holdingHandle->MouseStartPosition = mouse.position;
-		Angle rot = gizmo.target->Transform.Rotation;
-		Transform transform;
-		Vec2f newAxis = transform.RotatePoint(axis,rot);
-		float dist = -Dot(offset,newAxis);
-		Vec2f movement = newAxis * dist;
-		cout << offset.x << " " << offset.y << " " << dist << " " << movement.x << " " << movement.y << endl;
-		gizmo.target->Transform.Position = gizmo.target->Transform.Position + movement;
+			Vec2f axis = holdingHandle->Axis;
+			Vec2f offset = holdingHandle->MouseStartPosition - mouse.position;
+			holdingHandle->MouseStartPosition = mouse.position;
+			Angle rot = gizmo.target->Transform.Rotation;
+			Transform transform;
+			Vec2f newAxis = transform.RotatePoint(axis, rot);
+			float dist = -Dot(offset, newAxis);
+			Vec2f movement = newAxis * dist;
+			//cout << offset.x << " " << offset.y << " " << dist << " " << movement.x << " " << movement.y << endl;
+			gizmo.target->Transform.Position = gizmo.target->Transform.Position + movement;
+		}
+		else if (holdingHandle->Type == GizmoHandleType::Rotate) {
+			if (Arc* arc = As<Arc>(holdingHandle->Visual.get())) {
+				Vec2f dist1 = arc->Transform.Position - mouse.position;
+				Angle angle = Angle::Radians(atan2f(dist1.x,dist1.y));
+				holdingHandle->MouseStartPosition = mouse.position;
+				arc->Transform.Rotation.radians += holdingHandle->GizmoStartAngle.AsRadians() - angle.AsRadians();
+				holdingHandle->GizmoStartAngle.radians = angle.AsRadians();
+			}
+		}
 	}
 	else {
 		holdingHandle = nullptr;

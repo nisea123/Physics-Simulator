@@ -121,6 +121,48 @@ void Renderer::DrawArrowHead(const Arrow& item) {
 
 }
 
+void Renderer::Draw(const Arc& item) {
+
+	float num = item.num;
+	float rad = item.Radius;
+	float rot = item.Transform.Rotation.radians;
+	Vec2f pos = item.Transform.Position;
+
+	int m = num * (1 - item.shownPercentage);
+
+	float offset = .05f;
+
+	float ratio = Math::PI_DOUBLE / num;
+	
+
+	for (int i = 0;i <= num - m;i++) {
+
+		float n = ratio * i;
+		float n2 = ratio * (i + 1);
+
+		LineDesc lineDesc;
+		lineDesc.Start = Vec2f(cosf(n2 + offset + rot), sinf(n2 + offset + rot)) * rad + pos;
+		lineDesc.End = Vec2f(cosf(n + rot), sinf(n + rot)) * rad + pos;
+		lineDesc.Thickness = item.Thickness;
+		lineDesc.Color = item.Color;
+
+		DrawLine(lineDesc);
+
+		if (i == 0) {
+
+			ArrowDesc arrowDesc;
+			arrowDesc.Start = Vec2f(cosf(n2 + offset + rot), sinf(n2 + offset + rot)) * rad + pos;
+			arrowDesc.End = Vec2f(cosf(n - offset + rot), sinf(n - offset + rot)) * rad + pos;
+			arrowDesc.Thickness = item.Thickness;
+			arrowDesc.Color = item.Color;
+			arrowDesc.ArrowHeight = item.ArrowHeight;
+			arrowDesc.ArrowWidth = item.ArrowWidth;
+
+			DrawArrow(arrowDesc);
+		}
+	}
+}
+
 void Renderer::Draw(const Text& txt)
 {
 	float orgX = txt.Transform.Position.x;

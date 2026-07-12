@@ -14,6 +14,7 @@ enum class ObjectType
 	Circle = 3,
 	Line = 4,
 	Arrow = 5,
+	Rotation = 6,
 };
 
 class Object
@@ -127,6 +128,28 @@ public:
 	Arrow() {
 		ShapeType = Type;
 	}
+	bool Contains(Vec2f p) override;
+
+	void Draw(Renderer& renderer) override;
+};
+
+class Arc : public Arrow
+{
+public:
+	float Radius = 30.f;
+	float num = 50.f;
+	float shownPercentage = .8; // how much of the arc to make, 1 is the full circle, .5 is half the circleW
+
+	static constexpr ObjectType Type = ObjectType::Rotation;
+
+	Arc(Vec2f pos) {
+		ShapeType = Type;
+		Transform.Position = pos;
+	};
+	Arc() {
+		ShapeType = Type;
+	}
+
 	bool Contains(Vec2f p) override;
 
 	void Draw(Renderer& renderer) override;

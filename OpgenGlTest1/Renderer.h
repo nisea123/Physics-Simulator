@@ -25,6 +25,7 @@ public:
 	void Draw(const Line& item);
 	void Draw(const Line& item, float trimmed);
 	void Draw(const Arrow& item);
+	void Draw(const Arc& item);
 	void Draw(const Text& txt);
 	void Draw(const UiButton& item);
 	void Draw(const UiFrame& item);
@@ -32,6 +33,7 @@ public:
 	void Draw(const UiText& item);
 
 	void DrawArrow(ArrowDesc& desc);
+	void DrawLine(LineDesc& desc);
 
 	void Render(const glm::mat4& proj); // Drawing the stuff on the screen
 	void Clear();

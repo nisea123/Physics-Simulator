@@ -52,3 +52,11 @@ bool Arrow::Contains(Vec2f p)
 	if (!Visible) return false;
 	return Line::Contains(p);
 }
+
+bool Arc::Contains(Vec2f p)
+{
+	if (!Visible) return false;
+	Vec2f d = { p.x - Transform.Position.x, p.y - Transform.Position.y };
+	return (d.x * d.x + d.y * d.y) <= Radius * Radius;
+	return false;
+}

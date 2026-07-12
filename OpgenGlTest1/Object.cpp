@@ -20,3 +20,7 @@ void Line::Draw(Renderer& renderer) {
 void Arrow::Draw(Renderer& renderer) {
 	renderer.Draw(*this);
 }
+
+void Arc::Draw(Renderer& renderer) {
+	renderer.Draw(*this);
+}

@@ -72,9 +72,11 @@ int main() {
 
 	Scene scene;
 
-	scene.objects.SpawnWorld<Circle>(400.f,Vec2f{ width / 2.f, height / 2.f });
-	Arrow* arrow = scene.objects.SpawnWorld<Arrow>(Vec2f(0, 0), Vec2f(width / 2.f, height / 2.f), 20);
+//	scene.objects.SpawnWorld<Circle>(400.f,Vec2f{ width / 2.f, height / 2.f });
+	//Arrow* arrow = scene.objects.SpawnWorld<Arrow>(Vec2f(0, 0), Vec2f(width / 2.f, height / 2.f), 20);
 	//Arrow* arrow1 = scene.objects.SpawnWorld<Arrow>(Vec2f(width, height), Vec2f(width / 2.f, height / 2.f), 200);
+	Arc* arc = scene.objects.SpawnWorld<Arc>(Vec2f{ width / 2.f, height / 2.f });
+	arc->Visible = true;
 		
 	float i = 0;
 
@@ -86,7 +88,7 @@ int main() {
 
 	//Main while loop
 	while (!glfwWindowShouldClose(window)) {
-		i += .1f;
+	//	i += .001f;
 
 		now = chrono::high_resolution_clock::now();
 		deltaTime = chrono::duration<float>(now - last).count();
@@ -97,7 +99,7 @@ int main() {
 		//glBindTexture(GL_TEXTURE_2D, atlas);
 
 		mouse.Update(window, h);
-
+		//arc->Transform.Rotation.radians -= Angle::Radians(.0001f).AsRadians();
 		scene.Update(mouse);
 		scene.Draw(renderer);
 

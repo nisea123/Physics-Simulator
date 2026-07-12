@@ -13,4 +13,12 @@ struct ArrowDesc {
 	Color Color;
 };
 
+struct LineDesc {
+	Vec2f Start;
+	Vec2f End;
+
+	float Thickness;
+	Color Color;
+};
+
 //ArrowDesc toArrowDesc(const Arrow* object, float newThickness);

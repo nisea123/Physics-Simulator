@@ -19,7 +19,7 @@ struct GizmoHandle
 	GizmoHandleType Type;
 	Vec2f Axis;
 
-	Vec2f ObjectStartPosition;
+	Angle GizmoStartAngle;
 	Vec2f MouseStartPosition;
 
 	GizmoHandle(std::unique_ptr<Object> obj, GizmoHandleType t, Vec2f ax) : Visual(std::move(obj)), Type(t), Axis(ax) {};
@@ -31,9 +31,13 @@ public:
 
 	std::vector<GizmoHandle> handles;
 	Object* target;
-	float length = 100;
-	float thickness = 7;
-	float trim = 10;
+	float length = 100.f;
+	float thickness = 7.f;
+	float trim = 10.f;
+
+	float arcRadius = 10.f;
+	float arcMulti = .2f;
+	float arcThickness = 0.2f;
 
 	Gizmo() {
 		Init();
