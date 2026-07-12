@@ -19,6 +19,9 @@ struct GizmoHandle
 	GizmoHandleType Type;
 	Vec2f Axis;
 
+	Vec2f ObjectStartPosition;
+	Vec2f MouseStartPosition;
+
 	GizmoHandle(std::unique_ptr<Object> obj, GizmoHandleType t, Vec2f ax) : Visual(std::move(obj)), Type(t), Axis(ax) {};
 };
 

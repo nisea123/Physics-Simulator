@@ -94,7 +94,8 @@ void Scene::UpdateSelection(Mouse& mouse) {
 			selectedObject = nullptr;
 		}
 		else if (hoveredHandle) {
-			mouse.dragOffset = mouse.position;
+			holdingHandle = hoveredHandle;
+			holdingHandle->MouseStartPosition = mouse.position;
 		}
 	}
 }
@@ -129,7 +130,26 @@ void Scene::UpdateGizmo(Mouse& mouse) {
 		lastHoveredHandle = hoveredHandle;
 	}
 
+
+
 	if (holdingHandle && mouse.m1) {
 
+		if (Arrow* arr = As<Arrow>(holdingHandle->Visual.get())) {
+			arr->Thickness = gizmo.thickness * 1.5f;
+		}
+
+		Vec2f axis = holdingHandle->Axis;
+		Vec2f offset = holdingHandle->MouseStartPosition - mouse.position;
+		holdingHandle->MouseStartPosition = mouse.position;
+		Angle rot = gizmo.target->Transform.Rotation;
+		Transform transform;
+		Vec2f newAxis = transform.RotatePoint(axis,rot);
+		float dist = -Dot(offset,newAxis);
+		Vec2f movement = newAxis * dist;
+		cout << offset.x << " " << offset.y << " " << dist << " " << movement.x << " " << movement.y << endl;
+		gizmo.target->Transform.Position = gizmo.target->Transform.Position + movement;
+	}
+	else {
+		holdingHandle = nullptr;
 	}
 }

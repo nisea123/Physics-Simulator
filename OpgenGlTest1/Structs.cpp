@@ -31,5 +31,5 @@ Vec2f Normalize(Vec2f v)
 }
 
 float Dot(Vec2f a, Vec2f b) {
-    return a.x * b.x + a.y + b.y;
+    return a.x * b.x + a.y * b.y;
 }
