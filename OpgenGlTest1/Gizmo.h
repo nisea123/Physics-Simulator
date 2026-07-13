@@ -19,8 +19,8 @@ struct GizmoHandle
 	GizmoHandleType Type;
 	Vec2f Axis;
 
-	Angle GizmoStartAngle;
-	Vec2f MouseStartPosition;
+	Angle GizmoStartAngle = Angle::Radians(0);
+	Vec2f MouseStartPosition = Vec2f(0, 0);
 
 	GizmoHandle(std::unique_ptr<Object> obj, GizmoHandleType t, Vec2f ax) : Visual(std::move(obj)), Type(t), Axis(ax) {};
 };
@@ -38,6 +38,8 @@ public:
 	float arcRadius = 10.f;
 	float arcMulti = .2f;
 	float arcThickness = 0.2f;
+
+	float scaleSize = .3f;
 
 	Gizmo() {
 		Init();

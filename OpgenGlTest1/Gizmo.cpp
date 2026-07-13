@@ -7,13 +7,21 @@
 #include <algorithm>
 
 void Gizmo::Init() {
-	// Adding move arrows
+
+	// Adding movement arrows
 	handles.emplace_back(std::make_unique<Arrow>(), GizmoHandleType::Move, Vec2f(-1, 0)); // Left Arrow
 	handles.emplace_back(std::make_unique<Arrow>(), GizmoHandleType::Move, Vec2f(0, 1)); // Up Arrow
 	handles.emplace_back(std::make_unique<Arrow>(), GizmoHandleType::Move, Vec2f(1, 0)); // Right Arrow
 	handles.emplace_back(std::make_unique<Arrow>(), GizmoHandleType::Move, Vec2f(0, -1)); // Down Arrow
 
+	//Adding rotation
 	handles.emplace_back(std::make_unique<Arc>(), GizmoHandleType::Rotate, Vec2f(1.5, 1.5));
+
+	//Adding scale
+	handles.emplace_back(std::make_unique<Rectangle>(), GizmoHandleType::Scale, Vec2f(-1, -1));
+	handles.emplace_back(std::make_unique<Rectangle>(), GizmoHandleType::Scale, Vec2f(1, 1));
+	handles.emplace_back(std::make_unique<Rectangle>(), GizmoHandleType::Scale, Vec2f(1, -1));
+	handles.emplace_back(std::make_unique<Rectangle>(), GizmoHandleType::Scale, Vec2f(-1, 1));
 
 	std::cout << "Gizmo initialized" << std::endl;
 }
@@ -42,6 +50,16 @@ void Gizmo::Show() {
 					arcRadius = arc->Radius;
 					arc->Thickness = arc->Radius * arcThickness;
 					arc->Visible = true;
+				}
+				if (Rectangle* square = dynamic_cast<Rectangle*>(handle.Visual.get())) {
+					Vec2f axis = handle.Axis;
+					Vec2f centerPos = Vec2f(middle.x * axis.x, middle.y * axis.y);
+					Vec2f newPos = transform.RotatePoint(centerPos, transform.Rotation);
+
+					square->Transform.Position = pos + newPos;
+					square->Transform.Rotation = transform.Rotation;
+					square->Size = size * scaleSize;
+					square->Visible = true;
 				}
 			}
 	}

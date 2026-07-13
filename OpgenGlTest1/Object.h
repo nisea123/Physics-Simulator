@@ -58,7 +58,9 @@ public:
 	static constexpr ObjectType Type = ObjectType::Rectangle;
 
 	Rectangle() {
-	 Size = { 0.0f ,0.0f };
+	 Size = Vec2f(10.0f ,10.0f);
+	 Transform.Position = Vec2f(100.f, 100.f);
+	 ShapeType = Type;
 	}
 	Rectangle(Vec2f siz, Vec2f pos) 
 	{

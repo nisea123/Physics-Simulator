@@ -96,7 +96,7 @@ void Scene::UpdateSelection(Mouse& mouse) {
 		else if (hoveredHandle) {
 			holdingHandle = hoveredHandle;
 			holdingHandle->MouseStartPosition = mouse.position;
-			holdingHandle->GizmoStartAngle = holdingObject->Transform.Rotation;
+			holdingHandle->GizmoStartAngle = gizmo.target->Transform.Rotation;
 		}
 	}
 }
@@ -160,9 +160,17 @@ void Scene::UpdateGizmo(Mouse& mouse) {
 			if (Arc* arc = As<Arc>(holdingHandle->Visual.get())) {
 				Vec2f dist1 = arc->Transform.Position - mouse.position;
 				Angle angle = Angle::Radians(atan2f(dist1.x,dist1.y));
-				holdingHandle->MouseStartPosition = mouse.position;
+
 				arc->Transform.Rotation.radians += holdingHandle->GizmoStartAngle.AsRadians() - angle.AsRadians();
+				gizmo.target->Transform.Rotation.radians += holdingHandle->GizmoStartAngle.AsRadians() - angle.AsRadians();
+
 				holdingHandle->GizmoStartAngle.radians = angle.AsRadians();
+				holdingHandle->MouseStartPosition = mouse.position;
+			}
+		}
+		else if (holdingHandle->Type == GizmoHandleType::Scale) {
+			if (Rectangle* rect = As<Rectangle>(holdingHandle->Visual.get())) {
+
 			}
 		}
 	}
