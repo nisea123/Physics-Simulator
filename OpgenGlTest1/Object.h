@@ -138,7 +138,7 @@ public:
 class Arc : public Arrow
 {
 public:
-	float Radius = 30.f;
+	float Radius = 50.f;
 	float num = 50.f;
 	float shownPercentage = .8; // how much of the arc to make, 1 is the full circle, .5 is half the circleW
 

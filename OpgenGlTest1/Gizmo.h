@@ -31,15 +31,19 @@ public:
 
 	std::vector<GizmoHandle> handles;
 	Object* target;
-	float length = 100.f;
-	float thickness = 7.f;
-	float trim = 10.f;
 
-	float arcRadius = 10.f;
-	float arcMulti = .2f;
+	float lengthScale = .8f;
+	float lineThickness = .1f;
+	float trimScale = .4f;
+
+	float radiusMulti = .2f;
 	float arcThickness = 0.2f;
 
-	float scaleSize = .3f;
+	float scaleMulti = .3f;
+
+	float handleScale = 0.f;
+
+	float minimumObjSize = 40.f;
 
 	Gizmo() {
 		Init();

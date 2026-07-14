@@ -76,7 +76,7 @@ int main() {
 	//Arrow* arrow = scene.objects.SpawnWorld<Arrow>(Vec2f(0, 0), Vec2f(width / 2.f, height / 2.f), 20);
 	//Arrow* arrow1 = scene.objects.SpawnWorld<Arrow>(Vec2f(width, height), Vec2f(width / 2.f, height / 2.f), 200);
 	Arc* arc = scene.objects.SpawnWorld<Arc>(Vec2f{ width / 2.f, height / 2.f });
-	arc->Visible = true;
+	arc->Visible = false;
 		
 	float i = 0;
 

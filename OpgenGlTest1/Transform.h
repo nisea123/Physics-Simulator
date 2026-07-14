@@ -9,6 +9,6 @@ struct Transform
 	Vec2f Scale = { 1.f, 1.f };
 
 	Vec2f Apply(Vec2f point);
-	Vec2f RotatePoint(Vec2f point, Angle angle);
-	Vec2f RotateAroundPivot(Vec2f point, Vec2f pivot, float angle);
+	static Vec2f RotatePoint(Vec2f point, Angle angle);
+	static Vec2f RotateAroundPivot(Vec2f point, Vec2f pivot, float angle);
 };

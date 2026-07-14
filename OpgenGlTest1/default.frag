@@ -75,9 +75,9 @@ void DrawRectangle()
 
 void DrawCircle()
 {
-    vec2 p = (localPos - vec2(.5)) * Radius;
+    vec2 p = (localPos - vec2(.5)) * Radius * 2;
 
-    float r = Radius * 0.5;
+    float r = Radius;
 
     float d = length(p) - r;
 

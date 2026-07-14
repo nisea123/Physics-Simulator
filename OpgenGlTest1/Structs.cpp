@@ -16,6 +16,24 @@ Vec2f operator*(Vec2f v, float s)
     return { v.x * s, v.y * s };
 }
 
+Vec2f operator*(Vec2f a, Vec2f b) {
+    return { a.x * b.x, a.y * b.y };
+}
+
+Vec2f& operator+=(Vec2f& a,const Vec2f& b) {
+    a = a + b;
+    return a;
+}
+
+Vec2f& operator-=(Vec2f& a, const Vec2f& b) {
+    a = a - b;
+    return a;
+}
+
+Vec2f operator-(const Vec2f& v) {
+    return { -v.x,-v.y };
+}
+
 float Length(Vec2f v)
 {
     return std::sqrt(v.x * v.x + v.y * v.y);

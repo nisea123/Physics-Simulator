@@ -38,7 +38,11 @@ void main()
 
     // pass data to fragment shader
     Color = iColor;
+    if(iType == 3.0){ //Circle
+    Radius = iRadius / 2.0;
+    }else{
     Radius = iRadius;
+    }
     shapeType = iType;
     size = iSize;
     Rotation = iRotation;

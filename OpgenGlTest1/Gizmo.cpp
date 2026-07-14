@@ -15,7 +15,7 @@ void Gizmo::Init() {
 	handles.emplace_back(std::make_unique<Arrow>(), GizmoHandleType::Move, Vec2f(0, -1)); // Down Arrow
 
 	//Adding rotation
-	handles.emplace_back(std::make_unique<Arc>(), GizmoHandleType::Rotate, Vec2f(1.5, 1.5));
+	handles.emplace_back(std::make_unique<Arc>(), GizmoHandleType::Rotate, Vec2f(1.8, 1.8));
 
 	//Adding scale
 	handles.emplace_back(std::make_unique<Rectangle>(), GizmoHandleType::Scale, Vec2f(-1, -1));
@@ -31,36 +31,50 @@ void Gizmo::Show() {
 		Vec2f pos = rect->Transform.Position;
 		Vec2f size = rect->Size;
 		Vec2f middle = size * .5f;
-		Transform transform = rect->Transform;
+		Angle rot = rect->Transform.Rotation;
+		handleScale = (size.x + size.y) / 2.f;
 			for (GizmoHandle& handle : handles) {
 				if (Arrow* arr = dynamic_cast<Arrow*>(handle.Visual.get())) {
+
 					Vec2f axis = handle.Axis;
+
+					float trim = handleScale * trimScale;
+					float length = handleScale * lengthScale;
+
 					Vec2f newStart = Vec2f((middle.x + trim) * axis.x, (middle.y + trim) * axis.y);
 					Vec2f newEnd = newStart + Vec2f(length * axis.x, length * axis.y);
-					arr->Start = transform.RotatePoint(newStart,transform.Rotation) + pos;
-					arr->End = transform.RotatePoint(newEnd,transform.Rotation) + pos;
-					arr->Thickness = thickness;
-					arr->Visible = true;
+
+					arr->Start = Transform::RotatePoint(newStart,rot) + pos;
+					arr->End = Transform::RotatePoint(newEnd,rot) + pos;
+
+					arr->Thickness = handleScale * lineThickness;
+					
 				 }
 				if (Arc* arc = dynamic_cast<Arc*>(handle.Visual.get())) {
+
 					Vec2f axis = handle.Axis;
+
 					Vec2f arcPos = Vec2f(middle.x * axis.x, middle.y * axis.y);
+
 					arc->Transform.Position = pos + arcPos;
-					arc->Radius = std::max(size.x, size.y) * arcMulti;
-					arcRadius = arc->Radius;
+					arc->Radius = handleScale * radiusMulti;
+
 					arc->Thickness = arc->Radius * arcThickness;
-					arc->Visible = true;
+			
 				}
 				if (Rectangle* square = dynamic_cast<Rectangle*>(handle.Visual.get())) {
+
 					Vec2f axis = handle.Axis;
+
 					Vec2f centerPos = Vec2f(middle.x * axis.x, middle.y * axis.y);
-					Vec2f newPos = transform.RotatePoint(centerPos, transform.Rotation);
+					Vec2f newPos = Transform::RotatePoint(centerPos, rot);
 
 					square->Transform.Position = pos + newPos;
-					square->Transform.Rotation = transform.Rotation;
-					square->Size = size * scaleSize;
-					square->Visible = true;
+					square->Transform.Rotation = rot;
+					square->Size = Vec2f(handleScale * scaleMulti);
+				
 				}
+				handle.Visual.get()->Visible = true;
 			}
 	}
 

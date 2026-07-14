@@ -42,7 +42,7 @@ void Renderer::Draw(const Circle& item) {
 
 	shapeInstance.color = item.Color;
 	shapeInstance.position = item.Transform.Position;
-	shapeInstance.size = Vec2f(item.Radius,item.Radius);
+	shapeInstance.size = Vec2f(item.Radius,item.Radius) * 2 ;
 	shapeInstance.radius = item.Radius;
 	shapeInstance.type = static_cast<float>(item.ShapeType);
 
@@ -96,7 +96,7 @@ void Renderer::Draw(const Line& item, float trimmed) {
 }
 
 void Renderer::Draw(const Arrow& item) {
-	float trimmed = item.ArrowHeight + 10.f;
+	float trimmed = item.Thickness * item.ArrowHeight * 1.1f;
 
 	DrawArrowHead(item);
 	Draw(static_cast<const Line&>(item),trimmed);
