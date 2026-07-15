@@ -16,7 +16,7 @@ void UiManager::Init() {
 
 	spawnBlocks->OnClick = [=, this]() 
 		{
-			Rectangle* obj = objects.SpawnWorld<Rectangle>(Vec2f(100.f, 100.f), Vec2f(width / 2.f, height / 2.f));
+			Rectangle* obj = objects.SpawnPhysicsObject<Rectangle>(Vec2f(100.f, 100.f), Vec2f(width / 2.f, height / 2.f));
 			//obj->Transform.Rotation = Angle::Degrees(67);
 		};
 
@@ -26,6 +26,6 @@ void UiManager::Init() {
 
 	spawnCircle->OnClick = [=, this]()
 		{
-			Circle* obj = objects.SpawnWorld<Circle>(50.f, Vec2f(width / 2.f, height / 2.f));
+			Circle* obj = objects.SpawnPhysicsObject<Circle>(50.f, Vec2f(width / 2.f, height / 2.f));
 		};
 }

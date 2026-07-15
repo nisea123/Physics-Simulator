@@ -158,8 +158,10 @@
     <ClCompile Include="ObjectData.cpp" />
     <ClCompile Include="ObjectManager.cpp" />
     <ClCompile Include="ObjectRenderer.cpp" />
+    <ClCompile Include="PhysicsWorld.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="RendererDraw.cpp" />
+    <ClCompile Include="RigidBody.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="shaderClass.cpp" />
     <ClCompile Include="FontRenderer.cpp" />
@@ -184,7 +186,9 @@
     <ClInclude Include="ObjectData.h" />
     <ClInclude Include="ObjectManager.h" />
     <ClInclude Include="ObjectRenderer.h" />
+    <ClInclude Include="PhysicsWorld.h" />
     <ClInclude Include="Renderer.h" />
+    <ClInclude Include="RigidBody.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="ShapeInstance.h" />
     <ClInclude Include="Structs.h" />

@@ -38,7 +38,8 @@ void Scene::Draw(Renderer& renderer) {
 	}
 }
 
-void Scene::Update(Mouse& mouse) {
+void Scene::Update(float dt) {
+	physicsWorld.ApplyVectors(dt);
 	UpdateHover(mouse);
 	UpdateSelection(mouse);
 	UpdateDragging(mouse);

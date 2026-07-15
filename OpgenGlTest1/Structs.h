@@ -18,6 +18,7 @@ Vec2f operator+(Vec2f a, Vec2f b);
 Vec2f operator-(Vec2f a, Vec2f b);
 Vec2f operator*(Vec2f v, float s);
 Vec2f operator*(Vec2f a, Vec2f b);
+Vec2f operator/(Vec2f a, Vec2f b);
 Vec2f& operator+=(Vec2f& a, const Vec2f& b);
 Vec2f& operator-=(Vec2f& a, const Vec2f& b);
 Vec2f operator-(const Vec2f& v);

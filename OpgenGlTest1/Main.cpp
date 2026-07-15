@@ -62,13 +62,13 @@ int main() {
 	//Specifies the position and size of the viewport
 	glViewport(0, 0, width, height);
 
-	// Creating the vertex shader
+	// Creating the vertex shaders
 	Shader ObjectShaderProgram("default.vert", "default.frag");
 	Shader TextShaderProgram("text.vert", "text.frag");
 
 	Renderer renderer(ObjectShaderProgram,TextShaderProgram);
 
-	Mouse mouse;
+	
 
 	Scene scene;
 
@@ -92,15 +92,16 @@ int main() {
 
 		now = chrono::high_resolution_clock::now();
 		deltaTime = chrono::duration<float>(now - last).count();
-
+		last = now;
 		renderer.Clear();
 		int w, h;
 		glfwGetFramebufferSize(window, &w, &h);
 		//glBindTexture(GL_TEXTURE_2D, atlas);
 
-		mouse.Update(window, h);
 		//arc->Transform.Rotation.radians -= Angle::Radians(.0001f).AsRadians();
-		scene.Update(mouse);
+		//cout << deltaTime << endl;
+		scene.mouse.Update(window, h);
+		scene.Update(deltaTime);
 		scene.Draw(renderer);
 
 		renderer.Render(proj);

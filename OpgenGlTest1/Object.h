@@ -3,8 +3,12 @@
 
 #include "Structs.h"
 #include "Transform.h"
+#include "RigidBody.h"
+
+#include <memory>
 
 class Renderer;
+class RigidBody;
 
 enum class ObjectType
 {
@@ -14,7 +18,7 @@ enum class ObjectType
 	Circle = 3,
 	Line = 4,
 	Arrow = 5,
-	Rotation = 6,
+	Arc = 6,
 };
 
 class Object
@@ -24,6 +28,8 @@ public:
 	Color Color;
 	bool Visible = true;
 	ObjectType ShapeType = ObjectType::Object;
+
+	std::unique_ptr<RigidBody> PhysicsBody;
 
 	void OnDrag(Vec2f delta) {
 		Transform.Position.x += delta.x;
@@ -142,7 +148,7 @@ public:
 	float num = 50.f;
 	float shownPercentage = .8; // how much of the arc to make, 1 is the full circle, .5 is half the circleW
 
-	static constexpr ObjectType Type = ObjectType::Rotation;
+	static constexpr ObjectType Type = ObjectType::Arc;
 
 	Arc(Vec2f pos) {
 		ShapeType = Type;

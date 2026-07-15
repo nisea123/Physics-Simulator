@@ -28,11 +28,14 @@ void Gizmo::Init() {
 
 void Gizmo::Show() {
 	if (Rectangle* rect = dynamic_cast<Rectangle*>(target)) {
+
 		Vec2f pos = rect->Transform.Position;
 		Vec2f size = rect->Size;
 		Vec2f middle = size * .5f;
 		Angle rot = rect->Transform.Rotation;
+
 		handleScale = (size.x + size.y) / 2.f;
+
 			for (GizmoHandle& handle : handles) {
 				if (Arrow* arr = dynamic_cast<Arrow*>(handle.Visual.get())) {
 

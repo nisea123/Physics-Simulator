@@ -20,6 +20,10 @@ Vec2f operator*(Vec2f a, Vec2f b) {
     return { a.x * b.x, a.y * b.y };
 }
 
+Vec2f operator/(Vec2f a, Vec2f b) {
+    return { a.x / b.x, a.y / b.y };
+}
+
 Vec2f& operator+=(Vec2f& a,const Vec2f& b) {
     a = a + b;
     return a;
