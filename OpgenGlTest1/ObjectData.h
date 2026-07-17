@@ -21,4 +21,8 @@ struct LineDesc {
 	Color Color;
 };
 
+struct TextDesc {
+
+};
+
 //ArrowDesc toArrowDesc(const Arrow* object, float newThickness);

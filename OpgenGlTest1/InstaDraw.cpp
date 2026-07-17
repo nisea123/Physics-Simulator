@@ -3,7 +3,7 @@
 
 void Renderer::DrawArrow(ArrowDesc& desc) {
 
-	float trimmed = desc.ArrowHeight + 10.f;
+	float trimmed = desc.ArrowHeight * desc.Thickness * 1.1f;
 
 	float arrowHeight = desc.Thickness * desc.ArrowHeight;
 	float arrowWidth = desc.Thickness * desc.ArrowWidth;
@@ -71,4 +71,8 @@ void Renderer::DrawLine(LineDesc& desc) {
 	line.radius = 0;
 
 	objRenderer.shapeInstances.push_back(line);
+}
+
+void Renderer::DrawText(TextDesc& desc) {
+
 }

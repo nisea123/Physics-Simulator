@@ -5,6 +5,7 @@
 #include <algorithm>
 
 void Scene::Draw(Renderer& renderer) {
+
 	for (auto& object : objects.objects) {
 
 		if (object->Visible) {
@@ -13,6 +14,9 @@ void Scene::Draw(Renderer& renderer) {
 
 
 	}
+
+	physicsWorld.DisplayArrows(renderer);
+
 	for (auto& object : ui.ui) {
 		UiElement* o = object.get();
 

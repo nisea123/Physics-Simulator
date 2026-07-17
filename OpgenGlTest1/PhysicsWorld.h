@@ -13,5 +13,6 @@ public:
 	void RegisterRigidBody(RigidBody* rigBody) {
 		rigidBodyRegister.push_back(rigBody);
 	}
+	void DisplayArrows(Renderer& renderer);
 };
 

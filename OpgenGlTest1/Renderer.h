@@ -34,6 +34,7 @@ public:
 
 	void DrawArrow(ArrowDesc& desc);
 	void DrawLine(LineDesc& desc);
+	void DrawText(TextDesc& desc);
 
 	void Render(const glm::mat4& proj); // Drawing the stuff on the screen
 	void Clear();

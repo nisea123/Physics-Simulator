@@ -25,8 +25,9 @@ public:
 	N* SpawnPhysicsObject(Args&&... args) {
 		N* obj = SpawnWorld<N>(std::forward<Args>(args)...);
 		RigidBody* rigBody = assignRigidBody(obj);
-		rigBody->Forces = Vec2f(1.f, 1.f);
+		rigBody->Forces.push_back(Vec2f(0.f, -9.81f));
+		rigBody->Forces.push_back(Vec2f(10.f, 9.81f));
+		rigBody->Forces.push_back(Vec2f(-5.f, 13.81f));
 		return obj;
 	}
 };
-

@@ -97,7 +97,7 @@ int main() {
 		int w, h;
 		glfwGetFramebufferSize(window, &w, &h);
 		//glBindTexture(GL_TEXTURE_2D, atlas);
-
+		
 		//arc->Transform.Rotation.radians -= Angle::Radians(.0001f).AsRadians();
 		//cout << deltaTime << endl;
 		scene.mouse.Update(window, h);
