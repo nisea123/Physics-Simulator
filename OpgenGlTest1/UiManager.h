@@ -2,6 +2,7 @@
 
 #include "ObjectManager.h"
 #include "Ui.h"
+#include "Font.h"
 
 class UiManager
 {

@@ -27,4 +27,10 @@ public:
 		}
 		return newForce;
 	};
+	Vec2f AddForce() {
+
+	}
+	Vec2f RemoveForce() {
+
+	}
 };

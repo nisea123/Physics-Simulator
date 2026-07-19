@@ -149,6 +149,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="EBO.cpp" />
+    <ClCompile Include="FontManager.cpp" />
     <ClCompile Include="Gizmo.cpp" />
     <ClCompile Include="glad.c" />
     <ClCompile Include="InstaDraw.cpp" />
@@ -178,6 +179,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="EBO.h" />
+    <ClInclude Include="Font.h" />
+    <ClInclude Include="FontManager.h" />
     <ClInclude Include="Gizmo.h" />
     <ClInclude Include="Math.h" />
     <ClInclude Include="Mouse.h" />

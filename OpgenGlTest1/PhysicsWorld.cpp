@@ -15,10 +15,10 @@ void PhysicsWorld::ApplyVectors(float dt) {
 		rigBody->Velocity += rigBody->Acceleration * dt;
 		rigBody->owner->Transform.Position += rigBody->Velocity * dt;
 
-		std::cout << "Force: x: " << rigBody->netForce.x << " y : " << rigBody->netForce.y << std::endl;
-		std::cout << "Acceleration: x: " << rigBody->Acceleration.x << " y: " << rigBody->Acceleration.y << std::endl;
-		std::cout << "Velocity: x: " << rigBody->Velocity.x << " y: " << rigBody->Velocity.y << std::endl;
-		std::cout << std::endl;
+		//std::cout << "Force: x: " << rigBody->netForce.x << " y : " << rigBody->netForce.y << std::endl;
+		//std::cout << "Acceleration: x: " << rigBody->Acceleration.x << " y: " << rigBody->Acceleration.y << std::endl;
+		//std::cout << "Velocity: x: " << rigBody->Velocity.x << " y: " << rigBody->Velocity.y << std::endl;
+		//std::cout << std::endl;
 	}
 }
 
@@ -31,7 +31,7 @@ void PhysicsWorld::DisplayArrows(Renderer& renderer) {
 			ForceDesc.End = rigBody->owner->Transform.Position + force * 10.f;
 			float forceScale = Length(force);
 
-			ForceDesc.Thickness = .8f * forceScale;
+			ForceDesc.Thickness = std::min(.8f * forceScale, 25.f);
 			ForceDesc.ArrowHeight = 5.f;
 			ForceDesc.ArrowWidth = 3.f;
 			renderer.DrawArrow(ForceDesc);
@@ -43,7 +43,7 @@ void PhysicsWorld::DisplayArrows(Renderer& renderer) {
 		NetForceDesc.End = rigBody->owner->Transform.Position + rigBody->netForce * 10.f;
 		float netScale = Length(rigBody->netForce);
 
-		NetForceDesc.Thickness = 1.f * netScale;
+		NetForceDesc.Thickness = std::min(1.f * netScale, 25.f);
 		NetForceDesc.ArrowHeight = 5.f;
 		NetForceDesc.ArrowWidth = 3.f;
 		renderer.DrawArrow(NetForceDesc);
@@ -54,7 +54,7 @@ void PhysicsWorld::DisplayArrows(Renderer& renderer) {
 		AccDesc.End = rigBody->owner->Transform.Position + rigBody->Acceleration* 12.f;
 		float accScale = Length(rigBody->Acceleration);
 
-		AccDesc.Thickness = .5f * accScale;
+		AccDesc.Thickness = std::min(.5f * accScale, 20.f);
 		AccDesc.ArrowHeight = 5.f;
 		AccDesc.ArrowWidth = 3.f;
 		renderer.DrawArrow(AccDesc);

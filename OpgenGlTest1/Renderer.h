@@ -6,6 +6,7 @@
 #include "Object.h"
 #include "ObjectData.h"
 #include "Ui.h"
+#include "FontManager.h"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -16,6 +17,7 @@ class Renderer
 public:
 	ObjectRenderer objRenderer;
 	TextRenderer txtRenderer;
+	FontManager fontManager;
 
 	Renderer(Shader& objShader, Shader& txtShader) : objRenderer(objShader), txtRenderer(txtShader) {};
 
