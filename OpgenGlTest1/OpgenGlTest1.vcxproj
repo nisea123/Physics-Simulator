@@ -189,6 +189,7 @@
     <ClInclude Include="ObjectData.h" />
     <ClInclude Include="ObjectManager.h" />
     <ClInclude Include="ObjectRenderer.h" />
+    <ClInclude Include="PhysicalVector.h" />
     <ClInclude Include="PhysicsWorld.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="RigidBody.h" />

@@ -68,9 +68,7 @@ int main() {
 
 	Renderer renderer(ObjectShaderProgram,TextShaderProgram);
 
-	
-
-	Scene scene;
+	Scene scene(renderer.fontManager);
 
 //	scene.objects.SpawnWorld<Circle>(400.f,Vec2f{ width / 2.f, height / 2.f });
 	//Arrow* arrow = scene.objects.SpawnWorld<Arrow>(Vec2f(0, 0), Vec2f(width / 2.f, height / 2.f), 20);

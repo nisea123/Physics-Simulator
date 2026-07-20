@@ -1,9 +1,9 @@
 #pragma once
 
-#include <vector>
+#include <unordered_map>
 
-#include "Structs.h"
 #include "Object.h"
+#include "PhysicalVector.h"
 
 class Object;
 
@@ -14,7 +14,7 @@ public:
 	
 	float Mass = 1.f;
 
-	std::vector<Vec2f> Forces;
+	std::unordered_map<std::string,PhysicalVector> Forces;
 	Vec2f netForce = { 0,0 };
 	Vec2f Acceleration = { 0,0 };
 	Vec2f Velocity = { 0,0 };
@@ -22,15 +22,17 @@ public:
 	RigidBody(Object* obj) : owner(obj) {};
 	Vec2f CalculateNetForce() const {
 		Vec2f newForce = { 0 };
-		for (const Vec2f& force : Forces) {
-			newForce += force;
+		for (auto [name, force]:Forces) {
+			newForce += force.Position;
 		}
 		return newForce;
 	};
-	Vec2f AddForce() {
-
+	void AddForce(std::string name,Vec2f position) {
+		Forces.emplace(name,PhysicalVector(position));
 	}
-	Vec2f RemoveForce() {
-
+	void RemoveForce(std::string name) {
+		if (Forces.contains(name)) {
+			Forces.erase(name);
+		}
 	}
 };

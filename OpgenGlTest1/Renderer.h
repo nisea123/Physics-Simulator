@@ -19,7 +19,7 @@ public:
 	TextRenderer txtRenderer;
 	FontManager fontManager;
 
-	Renderer(Shader& objShader, Shader& txtShader) : objRenderer(objShader), txtRenderer(txtShader) {};
+	Renderer(Shader& objShader, Shader& txtShader) : objRenderer(objShader), txtRenderer(txtShader), fontManager() {};
 
 	void Draw(const Rectangle& item);
 	void Draw(const Circle& item);

@@ -3,15 +3,16 @@
 #include "ObjectManager.h"
 #include "Ui.h"
 #include "Font.h"
+#include "FontManager.h"
 
 class UiManager
 {
 public:
-	Font font = Font("OpenSans.ttf");
+	FontManager& Fonts;
 	ObjectManager& objects;
 	std::vector<std::unique_ptr<UiElement>> ui;
 
-	UiManager(ObjectManager& obj) : objects(obj) {
+	UiManager(ObjectManager& obj, FontManager& fontManager) : objects(obj), Fonts(fontManager) {
 		Init();
 	}
 

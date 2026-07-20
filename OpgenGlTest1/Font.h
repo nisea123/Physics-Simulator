@@ -20,9 +20,5 @@ public:
 	int lineHeight;
 	std::map<char, Character> Characters;
 
-	Font() {
-		Font("OpenSans.ttf");
-	};
 	Font(const char* txt);
-
 };

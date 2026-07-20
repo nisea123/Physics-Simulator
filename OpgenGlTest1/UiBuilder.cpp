@@ -6,6 +6,7 @@ void UiManager::Init() {
 
 	GLFWmonitor* monitor = glfwGetPrimaryMonitor();
 	const GLFWvidmode* mode = glfwGetVideoMode(monitor);
+	Font& font = Fonts.GetDefaultFont();
 
 	unsigned int width = mode->width;
 	unsigned int height = mode->height;

@@ -161,9 +161,6 @@
     <ClInclude Include="shaderClass.h">
       <Filter>Header Files\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="Mouse.h">
-      <Filter>Header Files\Input</Filter>
-    </ClInclude>
     <ClInclude Include="ObjectRenderer.h">
       <Filter>Header Files\Core\Renderer</Filter>
     </ClInclude>
@@ -220,6 +217,12 @@
     </ClInclude>
     <ClInclude Include="Font.h">
       <Filter>Header Files\Data</Filter>
+    </ClInclude>
+    <ClInclude Include="Mouse.h">
+      <Filter>Header Files\Data</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysicalVector.h">
+      <Filter>Header Files\Physics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

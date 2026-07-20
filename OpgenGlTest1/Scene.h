@@ -30,7 +30,7 @@ public:
 	GizmoHandle* hoveredHandle = nullptr;
 	GizmoHandle* lastHoveredHandle = nullptr;
 
-	Scene() : objects([this](Object* obj) {return AssignRigidBody(obj);}), ui(objects), gizmo() {};
+	Scene(FontManager& fontManager) : objects([this](Object* obj) {return AssignRigidBody(obj);}), ui(objects,fontManager), gizmo() {};
 
 	void Draw(Renderer& renderer);
 	void Update(float dt);
