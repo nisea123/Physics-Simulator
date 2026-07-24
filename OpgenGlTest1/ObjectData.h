@@ -11,8 +11,8 @@ struct ArrowDesc {
 	Vec2f Start;
 	Vec2f End;
 
-	float ArrowWidth;
-	float ArrowHeight;
+	float ArrowWidth = 3.f;
+	float ArrowHeight = 5.f;
 	float Thickness;
 	Color Color;
 };

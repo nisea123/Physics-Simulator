@@ -16,7 +16,7 @@ void PhysicsWorld::ApplyVectors(float dt) {
 	for (RigidBody* rigBody : rigidBodyRegister) {
 		rigBody->netForce = rigBody->CalculateNetForce();
 
-		if (!rigBody->Anchored) {
+		if (!(rigBody->Anchored || rigBody->owner->Selected)) {
 			rigBody->Acceleration = rigBody->netForce / rigBody->Mass;
 			rigBody->Velocity += rigBody->Acceleration * dt;
 			rigBody->owner->Transform.Position += rigBody->Velocity * dt;
@@ -33,21 +33,23 @@ void PhysicsWorld::DisplayArrows(Renderer& renderer) {
 	Font& font = renderer.fontManager.GetDefaultFont();
 	for (RigidBody* rigBody : rigidBodyRegister) {
 
-		bool display = !rigBody->Anchored;
+		bool display = !(rigBody->Anchored || rigBody->owner->Selected);
 
 		if (!display) continue;
 
 		for (auto& [name, force] :rigBody->Forces) {
+
+			float forceScale = Length(force.Position);
+			float forceLength = logf(1.0f + forceScale) / logf(1.05f);
+
+			Vec2f forceDirection = Normalize(force.Position);
+			
 			ArrowDesc ForceDesc;
 			ForceDesc.Color = Color(0.3f, 0.f, 0.5f, 1.f);
 			ForceDesc.Start = rigBody->owner->Transform.Position;
-			ForceDesc.End = rigBody->owner->Transform.Position + force.Position * 2;
+			ForceDesc.End = ForceDesc.Start + forceDirection * forceLength;
 
-			float forceScale = Length(force.Position);
-
-			ForceDesc.Thickness = std::min(.2f * forceScale, 25.f);
-			ForceDesc.ArrowHeight = 5.f;
-			ForceDesc.ArrowWidth = 3.f;
+			ForceDesc.Thickness = std::min(.01f * forceScale, 25.f);
 			renderer.DrawArrow(ForceDesc);
 
 			TextDesc t(font);
@@ -56,47 +58,52 @@ void PhysicsWorld::DisplayArrows(Renderer& renderer) {
 			renderer.DrawText(t);
 		}
 
+
+		float netScale = Length(rigBody->netForce);
+		float netLength = logf(1.0f + netScale) / logf(1.05f);
+
+		Vec2f forceDirection = Normalize(rigBody->netForce);
+
 		ArrowDesc NetForceDesc;
 		NetForceDesc.Color = Color(0.6f, 0.2f, 1.f, 1.f);
 		NetForceDesc.Start = rigBody->owner->Transform.Position;
-		NetForceDesc.End = rigBody->owner->Transform.Position + rigBody->netForce * 2;
+		NetForceDesc.End = NetForceDesc.Start + forceDirection * netLength;
 
-		float netScale = Length(rigBody->netForce);
-
-		NetForceDesc.Thickness = std::min(.2f * netScale, 25.f);
-		NetForceDesc.ArrowHeight = 5.f;
-		NetForceDesc.ArrowWidth = 3.f;
+		NetForceDesc.Thickness = std::min(.01f * netScale, 25.f);
 		renderer.DrawArrow(NetForceDesc);
+	
+		float accScale = Length(rigBody->Acceleration);
+		float accLength = logf(1.0f + accScale) / logf(1.05f);
+
+		Vec2f accDirection = Normalize(rigBody->Acceleration);
 
 		ArrowDesc AccDesc;
 		AccDesc.Color = Color(1.f, 1.f, 0.f, 1.f);
 		AccDesc.Start = rigBody->owner->Transform.Position;
-		AccDesc.End = rigBody->owner->Transform.Position + rigBody->Acceleration;
+		AccDesc.End = AccDesc.Start + accDirection * accLength;;
 
-		float accScale = Length(rigBody->Acceleration);
-
-		AccDesc.Thickness = std::min(.1f * accScale, 20.f);
-		AccDesc.ArrowHeight = 5.f;
-		AccDesc.ArrowWidth = 3.f;
+		AccDesc.Thickness = std::min(.01f * accScale, 20.f);
 		renderer.DrawArrow(AccDesc);
+
+		float velScale = Length(rigBody->Velocity);
+		float velLength = logf(1.0f + velScale) / logf(1.05f);
+
+		Vec2f velDirection = Normalize(rigBody->Velocity);
 
 		ArrowDesc VelDesc;
 		float vecMulti = 5.f;
 
 		VelDesc.Color = Color(0.f, 1.f, 0.f, 1.f);
 		VelDesc.Start = rigBody->owner->Transform.Position;
-		VelDesc.End = rigBody->owner->Transform.Position + rigBody->Velocity * vecMulti;
-		
-		float velScale = Length(rigBody->Velocity);
+		VelDesc.End = VelDesc.Start + velDirection * velLength;
 
-		VelDesc.Thickness = std::min(.05f * velScale,20.f);
-		VelDesc.ArrowHeight = 5.f;
-		VelDesc.ArrowWidth = 3.f;
+		VelDesc.Thickness = std::min(.01f * velScale,20.f);
 		renderer.DrawArrow(VelDesc);
 	}
 }
 
 void PhysicsWorld::ResolveContact() {
+	float u = 1.2f;
 	for (Contact& contact : contactRegister) {
 		if (!contact.BodyA->Anchored && !contact.BodyB->Anchored) contact.penetration *= 0.5f;
 		if (!contact.BodyA->Anchored) {
@@ -104,6 +111,12 @@ void PhysicsWorld::ResolveContact() {
 			if (contact.normal.y == -1) {
 				contact.BodyA->Velocity.y = 0;
 				contact.BodyA->AddForce("Normal", -contact.BodyA->GetForce("Gravity").Position);
+
+				if (contact.BodyA->Velocity.x > 0.01f || contact.BodyB->Velocity.x < -0.01f) {
+					float fricDirection = contact.BodyA->Velocity.x > 0 ? -1.f: 1.f;
+					Vec2f friction = Vec2f(contact.BodyA->GetForce("Normal").Position.y * u * fricDirection, 0.f);
+					contact.BodyA->AddForce("Friction", friction);
+				}
 			}
 		}
 		if (!contact.BodyB->Anchored) {
@@ -111,6 +124,11 @@ void PhysicsWorld::ResolveContact() {
 			if (contact.normal.y == 1) {
 				contact.BodyB->Velocity.y = 0;
 				contact.BodyB->AddForce("Normal", -contact.BodyB->GetForce("Gravity").Position);
+				if (contact.BodyB->Velocity.x > 0.01f || contact.BodyB->Velocity.x < -0.01f) {
+					float fricDirection = contact.BodyB->Velocity.x > 0 ? -1.f : 1.f;
+					Vec2f friction = Vec2f(contact.BodyB->GetForce("Normal").Position.y * u * fricDirection, 0.f);
+					contact.BodyB->AddForce("Friction", friction);
+				}
 			}
 		}
 	}
@@ -120,5 +138,6 @@ void PhysicsWorld::ResolveContact() {
 void PhysicsWorld::ClearCalculatedForces() {
 	for (RigidBody* rigBody : rigidBodyRegister) {
 		rigBody->RemoveForce("Normal");
+		rigBody->RemoveForce("Friction");
 	}
 }

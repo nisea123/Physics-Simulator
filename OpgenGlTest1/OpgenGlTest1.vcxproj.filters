@@ -221,14 +221,14 @@
     <ClInclude Include="Font.h">
       <Filter>Header Files\Data</Filter>
     </ClInclude>
-    <ClInclude Include="Mouse.h">
-      <Filter>Header Files\Data</Filter>
-    </ClInclude>
     <ClInclude Include="PhysicalVector.h">
       <Filter>Header Files\Physics</Filter>
     </ClInclude>
     <ClInclude Include="CollisionSystem.h">
       <Filter>Header Files\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="Mouse.h">
+      <Filter>Header Files\Input</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

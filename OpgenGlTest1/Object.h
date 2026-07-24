@@ -28,6 +28,7 @@ public:
 	Color Color;
 	bool Visible = true;
 	bool Selectable = true;
+	bool Selected = false;
 	ObjectType ShapeType = ObjectType::Object;
 
 	std::unique_ptr<RigidBody> PhysicsBody;

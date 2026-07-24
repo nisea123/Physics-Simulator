@@ -61,6 +61,7 @@ int main() {
 
 	//Specifies the position and size of the viewport
 	glViewport(0, 0, width, height);
+	glfwSwapInterval(1);
 
 	// Creating the vertex shaders
 	Shader ObjectShaderProgram("default.vert", "default.frag");
@@ -71,7 +72,7 @@ int main() {
 	Scene scene(renderer.fontManager);
 
 //	scene.objects.SpawnWorld<Circle>(400.f,Vec2f{ width / 2.f, height / 2.f });
-	Rectangle* base = scene.objects.SpawnPhysicsObject<Rectangle>(Vec2f(width, 500.f), Vec2f(width / 2.f, height / 5.f));
+	Rectangle* base = scene.objects.SpawnPhysicsObject<Rectangle>(Vec2f(width, 200.f), Vec2f(width / 2.f, height / 10.f));
 	base->Selectable = false;
 	base->PhysicsBody->Anchored = true;
 		
@@ -97,7 +98,7 @@ int main() {
 		
 		//arc->Transform.Rotation.radians -= Angle::Radians(.0001f).AsRadians();
 		//cout << deltaTime << endl;
-		scene.mouse.Update(window, h);
+		scene.mouse.Update(window, h, deltaTime);
 		scene.Update(deltaTime);
 		scene.Draw(renderer);
 

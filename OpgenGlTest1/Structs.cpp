@@ -42,6 +42,10 @@ Vec2f abs(Vec2f v) {
     return Vec2f(std::abs(v.x), std::abs(v.y));
 }
 
+Vec2f logf(Vec2f v) {
+    return Vec2f(logf(v.x), logf(v.y));
+};
+
 float Length(Vec2f v)
 {
     return std::sqrt(v.x * v.x + v.y * v.y);

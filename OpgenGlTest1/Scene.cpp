@@ -13,7 +13,7 @@ void Scene::Draw(Renderer& renderer) {
 		}
 	}
 
-	physicsWorld.DisplayArrows(renderer);
+	//physicsWorld.DisplayArrows(renderer);
 
 	for (auto& object : ui.ui) {
 		UiElement* o = object.get();
@@ -45,7 +45,7 @@ void Scene::Update(float dt) {
 
 	UpdateHover(mouse);
 	UpdateSelection(mouse);
-	UpdateDragging(mouse);
+	UpdateDragging(mouse, dt);
 	UpdateGizmo(mouse);
 }
 
@@ -80,7 +80,6 @@ void Scene::UpdateHover(Mouse& mouse) {
 			}
 		}
 	}
-
 }
 
 void Scene::UpdateSelection(Mouse& mouse) {
@@ -94,7 +93,6 @@ void Scene::UpdateSelection(Mouse& mouse) {
 		else if (hoveredObject && hoveredObject->Selectable) {
 			selectedObject = hoveredObject;
 			holdingObject = hoveredObject;
-			mouse.dragOffset = mouse.position;
 		}
 		else if (!hoveredObject && !hoveredHandle) {
 			selectedObject = nullptr;
@@ -107,15 +105,22 @@ void Scene::UpdateSelection(Mouse& mouse) {
 	}
 }
 
-void Scene::UpdateDragging(Mouse& mouse) {
+void Scene::UpdateDragging(Mouse& mouse,float dt) {
 
 	if (mouse.m1 && holdingObject) {
-		
-		holdingObject->Transform.Position += mouse.position - mouse.dragOffset;
-		mouse.dragOffset = mouse.position;
+		Vec2f mouseDelta = mouse.position - mouse.lastPosition;
+
+		holdingObject->Transform.Position += mouseDelta;
+		holdingObject->Selected = true;
 	}
 
 	if (!mouse.m1) {
+		if (holdingObject) {
+			if (holdingObject->PhysicsBody) {
+				holdingObject->PhysicsBody->Velocity = mouse.GetDragDistance() * mouse.throwStrength;
+			}
+			holdingObject->Selected = false;
+		}
 		holdingObject = nullptr;
 	}
 }
