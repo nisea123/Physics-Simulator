@@ -71,10 +71,9 @@ int main() {
 	Scene scene(renderer.fontManager);
 
 //	scene.objects.SpawnWorld<Circle>(400.f,Vec2f{ width / 2.f, height / 2.f });
-	//Arrow* arrow = scene.objects.SpawnWorld<Arrow>(Vec2f(0, 0), Vec2f(width / 2.f, height / 2.f), 20);
-	//Arrow* arrow1 = scene.objects.SpawnWorld<Arrow>(Vec2f(width, height), Vec2f(width / 2.f, height / 2.f), 200);
-	Arc* arc = scene.objects.SpawnWorld<Arc>(Vec2f{ width / 2.f, height / 2.f });
-	arc->Visible = false;
+	Rectangle* base = scene.objects.SpawnPhysicsObject<Rectangle>(Vec2f(width, 500.f), Vec2f(width / 2.f, height / 5.f));
+	base->Selectable = false;
+	base->PhysicsBody->Anchored = true;
 		
 	float i = 0;
 

@@ -148,6 +148,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="CollisionSystem.cpp" />
     <ClCompile Include="EBO.cpp" />
     <ClCompile Include="FontManager.cpp" />
     <ClCompile Include="Gizmo.cpp" />
@@ -182,6 +183,7 @@
     <ClInclude Include="Font.h" />
     <ClInclude Include="FontManager.h" />
     <ClInclude Include="Gizmo.h" />
+    <ClInclude Include="CollisionSystem.h" />
     <ClInclude Include="Math.h" />
     <ClInclude Include="Mouse.h" />
     <ClInclude Include="Object.h" />

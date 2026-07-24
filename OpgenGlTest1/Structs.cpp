@@ -38,6 +38,10 @@ Vec2f operator-(const Vec2f& v) {
     return { -v.x,-v.y };
 }
 
+Vec2f abs(Vec2f v) {
+    return Vec2f(std::abs(v.x), std::abs(v.y));
+}
+
 float Length(Vec2f v)
 {
     return std::sqrt(v.x * v.x + v.y * v.y);

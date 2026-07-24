@@ -11,8 +11,6 @@ void Scene::Draw(Renderer& renderer) {
 		if (object->Visible) {
 			object->Draw(renderer);
 		}
-
-
 	}
 
 	physicsWorld.DisplayArrows(renderer);
@@ -43,7 +41,8 @@ void Scene::Draw(Renderer& renderer) {
 }
 
 void Scene::Update(float dt) {
-	physicsWorld.ApplyVectors(dt);
+	physicsWorld.Step(dt);
+
 	UpdateHover(mouse);
 	UpdateSelection(mouse);
 	UpdateDragging(mouse);
@@ -92,10 +91,10 @@ void Scene::UpdateSelection(Mouse& mouse) {
 				hoveredUi->OnClick();
 			}
 		}
-		else if (hoveredObject) {
+		else if (hoveredObject && hoveredObject->Selectable) {
 			selectedObject = hoveredObject;
 			holdingObject = hoveredObject;
-			mouse.dragOffset = mouse.position - holdingObject->Transform.Position;
+			mouse.dragOffset = mouse.position;
 		}
 		else if (!hoveredObject && !hoveredHandle) {
 			selectedObject = nullptr;
@@ -111,7 +110,9 @@ void Scene::UpdateSelection(Mouse& mouse) {
 void Scene::UpdateDragging(Mouse& mouse) {
 
 	if (mouse.m1 && holdingObject) {
-		holdingObject->Transform.Position = mouse.position - mouse.dragOffset;
+		
+		holdingObject->Transform.Position += mouse.position - mouse.dragOffset;
+		mouse.dragOffset = mouse.position;
 	}
 
 	if (!mouse.m1) {

@@ -27,6 +27,7 @@ public:
 	Transform Transform;
 	Color Color;
 	bool Visible = true;
+	bool Selectable = true;
 	ObjectType ShapeType = ObjectType::Object;
 
 	std::unique_ptr<RigidBody> PhysicsBody;
