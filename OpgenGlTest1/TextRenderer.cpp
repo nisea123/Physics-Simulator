@@ -1,7 +1,7 @@
 #include "TextRenderer.h"
 
-TextRenderer::TextRenderer(Shader& s) 
-	: shader(s), textVBO(&textVertices), textEBO(&textIndices) {
+TextRenderer::TextRenderer(Shader& s, Camera& cam) 
+	: shader(s), textVBO(&textVertices), textEBO(&textIndices), camera(cam) {
 
 	textVAO.Bind();
 

@@ -4,7 +4,6 @@
 #include<GLFW/glfw3.h>
 #include <chrono>
 #include <math.h>
-#include <map>
 
 #include "shaderClass.h"
 #include "Object.h"
@@ -12,6 +11,7 @@
 #include "Mouse.h"
 #include "Scene.h"
 #include "ObjectCast.h"
+#include "Window.h"
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -38,7 +38,7 @@ int main() {
 	unsigned int width = mode->width;
 	unsigned int height = mode->height;
 
-	GLFWwindow* window = glfwCreateWindow(width, height, "Physics Engine", NULL, NULL);
+	Window window(width, height, "Physics Engine");
 
 	glm::mat4 proj = glm::ortho(
 		0.0f, (float)width,
@@ -47,34 +47,45 @@ int main() {
 	);
 
 	//Error if the window cant be created
-	if (window == NULL) {
+	if (window.window == NULL) {
 		cerr << "Failed to create a window" << endl;
 		glfwTerminate();
 		return -1;
 	}
 
 	//Introduces the window into the current context
-	glfwMakeContextCurrent(window);
+	glfwMakeContextCurrent(window.window);
 
 	//Loads glad so it configures opengl
 	gladLoadGL();
 
 	//Specifies the position and size of the viewport
 	glViewport(0, 0, width, height);
-	glfwSwapInterval(1);
+	//glfwSwapInterval(1);
 
 	// Creating the vertex shaders
-	Shader ObjectShaderProgram("default.vert", "default.frag");
-	Shader TextShaderProgram("text.vert", "text.frag");
 
-	Renderer renderer(ObjectShaderProgram,TextShaderProgram);
+	Renderer& renderer = *window.renderer;
 
-	Scene scene(renderer.fontManager);
+	Scene scene(renderer.fontManager, window.camera);
 
 //	scene.objects.SpawnWorld<Circle>(400.f,Vec2f{ width / 2.f, height / 2.f });
 	Rectangle* base = scene.objects.SpawnPhysicsObject<Rectangle>(Vec2f(width, 200.f), Vec2f(width / 2.f, height / 10.f));
 	base->Selectable = false;
 	base->PhysicsBody->Anchored = true;
+
+	Rectangle* obstacle = scene.objects.SpawnPhysicsObject<Rectangle>(Vec2f(200.f, 200.f), Vec2f(width / 5.f, height / 2.f));
+	obstacle->Selectable = false;
+	obstacle->PhysicsBody->Anchored = true;
+
+	Text txt(renderer.fontManager.GetDefaultFont());
+	txt.Transform.Position = Vec2f(width / 2.f, height / 1.2f);
+
+	Text xPos(renderer.fontManager.GetDefaultFont());
+	xPos.Transform.Position = Vec2f(width / 6.f, height / 1.2f);
+
+	Text yPos(renderer.fontManager.GetDefaultFont());
+	yPos.Transform.Position = Vec2f(width / 6.f, height / 1.3f);
 		
 	float i = 0;
 
@@ -83,9 +94,10 @@ int main() {
 	float deltaTime = chrono::duration<float>(now - last).count();
 
 	bool checked = false;
+	int num = 0;
 
 	//Main while loop
-	while (!glfwWindowShouldClose(window)) {
+	while (!glfwWindowShouldClose(window.window)) {
 	//	i += .001f;
 
 		now = chrono::high_resolution_clock::now();
@@ -93,18 +105,31 @@ int main() {
 		last = now;
 		renderer.Clear();
 		int w, h;
-		glfwGetFramebufferSize(window, &w, &h);
+		glfwGetFramebufferSize(window.window, &w, &h);
 		//glBindTexture(GL_TEXTURE_2D, atlas);
 		
 		//arc->Transform.Rotation.radians -= Angle::Radians(.0001f).AsRadians();
 		//cout << deltaTime << endl;
-		scene.mouse.Update(window, h, deltaTime);
+	/*	while (num < 100) {
+			scene.objects.SpawnPhysicsObject<Rectangle>(Vec2f(100.f, 100.f), Vec2f(width / 2.f, height / 2.f));
+			num += 1;
+		}
+		txt.Content = "Number of objects : " + to_string(num);
+		*/
+
+		xPos.Content = "Camera X : " + to_string(window.camera.position.x);
+		yPos.Content = "Camera Y : " + to_string(window.camera.position.y);
+
+		scene.mouse.Update(window.window, h, deltaTime,window.camera);
 		scene.Update(deltaTime);
 		scene.Draw(renderer);
+		renderer.Draw(txt);
+		renderer.Draw(xPos);
+		renderer.Draw(yPos);
 
 		renderer.Render(proj);
 
-		glfwSwapBuffers(window);
+		glfwSwapBuffers(window.window);
 
 		//Gets events like mouse,keyboard etc
 		glfwPollEvents();
@@ -112,7 +137,7 @@ int main() {
 	
 	// Deletes them
 	renderer.Destroy();
-	glfwDestroyWindow(window);
+	glfwDestroyWindow(window.window);
 	glfwTerminate();
 
 	return 0;

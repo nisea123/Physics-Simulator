@@ -13,7 +13,7 @@ void Scene::Draw(Renderer& renderer) {
 		}
 	}
 
-	//physicsWorld.DisplayArrows(renderer);
+	physicsWorld.DisplayArrows(renderer);
 
 	for (auto& object : ui.ui) {
 		UiElement* o = object.get();
@@ -46,7 +46,7 @@ void Scene::Update(float dt) {
 	UpdateHover(mouse);
 	UpdateSelection(mouse);
 	UpdateDragging(mouse, dt);
-	UpdateGizmo(mouse);
+	//UpdateGizmo(mouse);
 }
 
 void Scene::UpdateHover(Mouse& mouse) {
@@ -106,12 +106,16 @@ void Scene::UpdateSelection(Mouse& mouse) {
 }
 
 void Scene::UpdateDragging(Mouse& mouse,float dt) {
-
+	Vec2f mouseDelta = (mouse.position - mouse.lastPosition) - camera.position + camera.lastPosition;
 	if (mouse.m1 && holdingObject) {
-		Vec2f mouseDelta = mouse.position - mouse.lastPosition;
+		
 
 		holdingObject->Transform.Position += mouseDelta;
 		holdingObject->Selected = true;
+	}
+	else if (!holdingObject && mouse.m1) {
+		camera.lastPosition = camera.position;
+		camera.position += mouseDelta;
 	}
 
 	if (!mouse.m1) {

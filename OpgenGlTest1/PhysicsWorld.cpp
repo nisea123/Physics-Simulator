@@ -49,7 +49,7 @@ void PhysicsWorld::DisplayArrows(Renderer& renderer) {
 			ForceDesc.Start = rigBody->owner->Transform.Position;
 			ForceDesc.End = ForceDesc.Start + forceDirection * forceLength;
 
-			ForceDesc.Thickness = std::min(.01f * forceScale, 25.f);
+			ForceDesc.Thickness = std::min(.1f * forceScale, 10.f);
 			renderer.DrawArrow(ForceDesc);
 
 			TextDesc t(font);
@@ -73,7 +73,7 @@ void PhysicsWorld::DisplayArrows(Renderer& renderer) {
 		renderer.DrawArrow(NetForceDesc);
 	
 		float accScale = Length(rigBody->Acceleration);
-		float accLength = logf(1.0f + accScale) / logf(1.05f);
+		float accLength = logf(1.0f + accScale) / logf(1.1f);
 
 		Vec2f accDirection = Normalize(rigBody->Acceleration);
 
@@ -103,13 +103,17 @@ void PhysicsWorld::DisplayArrows(Renderer& renderer) {
 }
 
 void PhysicsWorld::ResolveContact() {
-	float u = 1.2f;
+	float u = .2f;
+	float speedMulti = .5f;
 	for (Contact& contact : contactRegister) {
 		if (!contact.BodyA->Anchored && !contact.BodyB->Anchored) contact.penetration *= 0.5f;
 		if (!contact.BodyA->Anchored) {
+			if (contact.BodyA->Velocity.y != 0) {
+				contact.BodyA->Velocity.y = -contact.BodyA->Velocity.y * speedMulti;
+			}
 			contact.BodyA->owner->Transform.Position -= contact.normal * contact.penetration;
 			if (contact.normal.y == -1) {
-				contact.BodyA->Velocity.y = 0;
+				
 				contact.BodyA->AddForce("Normal", -contact.BodyA->GetForce("Gravity").Position);
 
 				if (contact.BodyA->Velocity.x > 0.01f || contact.BodyB->Velocity.x < -0.01f) {
@@ -121,8 +125,11 @@ void PhysicsWorld::ResolveContact() {
 		}
 		if (!contact.BodyB->Anchored) {
 			contact.BodyB->owner->Transform.Position += contact.normal * contact.penetration;
+			if (contact.BodyB->Velocity.y != 0) {
+				contact.BodyB->Velocity.y = -contact.BodyB->Velocity.y * speedMulti;
+			}
 			if (contact.normal.y == 1) {
-				contact.BodyB->Velocity.y = 0;
+				
 				contact.BodyB->AddForce("Normal", -contact.BodyB->GetForce("Gravity").Position);
 				if (contact.BodyB->Velocity.x > 0.01f || contact.BodyB->Velocity.x < -0.01f) {
 					float fricDirection = contact.BodyB->Velocity.x > 0 ? -1.f : 1.f;

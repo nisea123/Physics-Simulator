@@ -1,8 +1,8 @@
 #include "ObjectRenderer.h"
 #include <iostream>
 
-ObjectRenderer::ObjectRenderer(Shader& s)
-	: shader(s), quadVBO(&vertices), instanceVBO(&shapeInstances), objEBO(&indices)
+ObjectRenderer::ObjectRenderer(Shader& s,Camera& cam)
+	: shader(s), camera(cam), quadVBO(&vertices), instanceVBO(&shapeInstances), objEBO(&indices)
 {
 	objVAO.Bind();
 

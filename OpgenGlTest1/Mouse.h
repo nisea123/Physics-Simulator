@@ -3,6 +3,7 @@
 #include "Structs.h"
 #include<GLFW/glfw3.h>
 #include <deque>
+#include "Camera.h"
 
 class Mouse
 {
@@ -20,14 +21,14 @@ public:
 	bool m1Prev = false;
 	bool m1Pressed = false;
 
-	void Update(GLFWwindow* window, unsigned int height, float dt) {
+	void Update(GLFWwindow* window, unsigned int height, float dt,Camera& camera) {
 		m1Prev = m1;
 		double x, y;
 		glfwGetCursorPos(window, &x, &y);
 		y = height - y;
 
 		lastPosition = position;
-		position = { (float)x,(float)y };
+		position = Vec2f((float)x,(float)y) + camera.position;
 
 		dragHistory.push_back(position - lastPosition);
 		a += dt;

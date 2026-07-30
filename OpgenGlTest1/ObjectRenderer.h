@@ -8,6 +8,7 @@
 #include "EBO.h"
 #include "shaderClass.h"
 #include "ShapeInstance.h"
+#include "Camera.h"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -21,8 +22,9 @@ public:
 	std::vector<GLfloat> vertices;
 	std::vector<GLuint> indices;
 	std::vector<ShapeInstance> shapeInstances;
+	Camera& camera;
 
-	ObjectRenderer(Shader& s);
+	ObjectRenderer(Shader& s, Camera& cam);
 
 	// Used to draw objects
 	void Render(const glm::mat4& proj); // Drawing the stuff on the screen

@@ -7,6 +7,7 @@
 #include "ObjectData.h"
 #include "Ui.h"
 #include "FontManager.h"
+#include "Camera.h"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -15,11 +16,20 @@
 class Renderer
 {
 public:
+	Camera& camera;
+
 	ObjectRenderer objRenderer;
 	TextRenderer txtRenderer;
+
+	Shader objectShader;
+	Shader textShader;
+	
 	FontManager fontManager;
 
-	Renderer(Shader& objShader, Shader& txtShader) : objRenderer(objShader), txtRenderer(txtShader), fontManager() {};
+	Renderer(Camera& cam) : camera(cam), fontManager(), objectShader("default.vert", "default.frag"),
+		textShader("text.vert", "text.frag"),
+		objRenderer(objectShader,camera), txtRenderer(textShader,camera)
+		 {};
 
 	void Draw(const Rectangle& item);
 	void Draw(const Circle& item);

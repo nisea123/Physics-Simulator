@@ -18,6 +18,8 @@ public:
 	PhysicsWorld physicsWorld;
 	Mouse mouse;
 
+	Camera& camera;
+
 	// In the future i will  all of these Objects to their respective manager for now i will keep it here for simplicity
 
 	Object* selectedObject = nullptr;
@@ -30,7 +32,7 @@ public:
 	GizmoHandle* hoveredHandle = nullptr;
 	GizmoHandle* lastHoveredHandle = nullptr;
 
-	Scene(FontManager& fontManager) : objects([this](Object* obj) {return AssignRigidBody(obj);}), ui(objects,fontManager), gizmo() {};
+	Scene(FontManager& fontManager,Camera& camera) : objects([this](Object* obj) {return AssignRigidBody(obj);}), ui(objects,fontManager), gizmo(), camera(camera) {};
 
 	void Draw(Renderer& renderer);
 	void Update(float dt);
