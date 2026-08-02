@@ -18,6 +18,7 @@ bool Rectangle::Contains(Vec2f p)
 	if (!Visible) return false;
 	Vec2f half = Size * 0.5f;
 
+
 	Vec2f min = Transform.Position - half;
 	Vec2f max = Transform.Position + half;
 

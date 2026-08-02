@@ -57,7 +57,7 @@ void Scene::UpdateHover(Mouse& mouse) {
 
 	for (auto& ui : ui.ui)
 	{
-		if (ui->Contains(mouse.position))
+		if (ui->Contains(mouse.worldPosition))
 		{
 			hoveredUi = ui.get();
 		}
@@ -66,7 +66,7 @@ void Scene::UpdateHover(Mouse& mouse) {
 	if (!hoveredUi) {
 		for (auto& object : objects.objects)
 		{
-			if (object->Contains(mouse.position))
+			if (object->Contains(mouse.worldPosition))
 			{
 				hoveredObject = object.get();
 				break;
@@ -74,7 +74,7 @@ void Scene::UpdateHover(Mouse& mouse) {
 		}
 		for (GizmoHandle& handle : gizmo.handles) {
 			Object* o = handle.Visual.get();
-			if (o->Contains(mouse.position)) {
+			if (o->Contains(mouse.worldPosition)) {
 				hoveredHandle = &handle;
 
 			}
@@ -106,22 +106,22 @@ void Scene::UpdateSelection(Mouse& mouse) {
 }
 
 void Scene::UpdateDragging(Mouse& mouse,float dt) {
-	Vec2f mouseDelta = (mouse.position - mouse.lastPosition) - camera.position + camera.lastPosition;
+	Vec2f mouseDelta = mouse.position - mouse.lastPosition;
 	if (mouse.m1 && holdingObject) {
 		
 
-		holdingObject->Transform.Position += mouseDelta;
+		holdingObject->Transform.Position += mouseDelta / camera.zoom;
 		holdingObject->Selected = true;
 	}
 	else if (!holdingObject && mouse.m1) {
 		camera.lastPosition = camera.position;
-		camera.position += mouseDelta;
+		camera.position -= mouseDelta;
 	}
 
 	if (!mouse.m1) {
 		if (holdingObject) {
 			if (holdingObject->PhysicsBody) {
-				holdingObject->PhysicsBody->Velocity = mouse.GetDragDistance() * mouse.throwStrength;
+				holdingObject->PhysicsBody->Velocity = mouse.GetDragDistance() * mouse.throwStrength / camera.zoom;
 			}
 			holdingObject->Selected = false;
 		}

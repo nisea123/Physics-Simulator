@@ -40,6 +40,8 @@ int main() {
 
 	Window window(width, height, "Physics Engine");
 
+	window.camera.position = Vec2f(width / 2.f, height / 2.f);
+
 	glm::mat4 proj = glm::ortho(
 		0.0f, (float)width,
 		0.0f, (float)height,   // flipped Y
@@ -77,16 +79,36 @@ int main() {
 	Rectangle* obstacle = scene.objects.SpawnPhysicsObject<Rectangle>(Vec2f(200.f, 200.f), Vec2f(width / 5.f, height / 2.f));
 	obstacle->Selectable = false;
 	obstacle->PhysicsBody->Anchored = true;
+	
+	Rectangle* obstacle2 = scene.objects.SpawnPhysicsObject<Rectangle>(Vec2f(100.f, 100.f), Vec2f(width / 2.f, height / 2.f));
 
-	Text txt(renderer.fontManager.GetDefaultFont());
-	txt.Transform.Position = Vec2f(width / 2.f, height / 1.2f);
+	float textOffset = width / 10.f;
+	float textOffsetY = 100.f;
+
+	//Text txt(renderer.fontManager.GetDefaultFont());
+	//txt.Transform.Position = Vec2f(width / 2.f, textOffsetY);
 
 	Text xPos(renderer.fontManager.GetDefaultFont());
-	xPos.Transform.Position = Vec2f(width / 6.f, height / 1.2f);
+	xPos.Transform.Position = Vec2f(textOffset, height - textOffsetY);
 
 	Text yPos(renderer.fontManager.GetDefaultFont());
-	yPos.Transform.Position = Vec2f(width / 6.f, height / 1.3f);
-		
+	yPos.Transform.Position = Vec2f(textOffset, height - textOffsetY * 2);
+	
+	Text mousePosX(renderer.fontManager.GetDefaultFont());
+	mousePosX.Transform.Position = Vec2f(textOffset, height - textOffsetY * 3);
+
+	Text mousePosY(renderer.fontManager.GetDefaultFont());
+	mousePosY.Transform.Position = Vec2f(textOffset, height - textOffsetY * 4);
+
+	Text obstaclePosX(renderer.fontManager.GetDefaultFont());
+	obstaclePosX.Transform.Position = Vec2f(textOffset, height - textOffsetY * 5);
+
+	Text obstaclePosY(renderer.fontManager.GetDefaultFont());
+	obstaclePosY.Transform.Position = Vec2f(textOffset, height - textOffsetY * 6);
+
+	Text cameraZoom(renderer.fontManager.GetDefaultFont());
+	cameraZoom.Transform.Position = Vec2f(textOffset, height - textOffsetY * 7);
+
 	float i = 0;
 
 	static auto last = chrono::high_resolution_clock::now();
@@ -105,7 +127,9 @@ int main() {
 		last = now;
 		renderer.Clear();
 		int w, h;
+		float zoom = window.camera.zoom.x;
 		glfwGetFramebufferSize(window.window, &w, &h);
+		Vec2f screenSize = Vec2f(w, h);
 		//glBindTexture(GL_TEXTURE_2D, atlas);
 		
 		//arc->Transform.Rotation.radians -= Angle::Radians(.0001f).AsRadians();
@@ -116,16 +140,35 @@ int main() {
 		}
 		txt.Content = "Number of objects : " + to_string(num);
 		*/
+		proj = glm::ortho(
+			window.camera.position.x - (float)width / (2 * zoom), window.camera.position.x + (float)width / (2 * zoom),
+			window.camera.position.y - (float)height / (2 * zoom), window.camera.position.y + (float)height / (2 * zoom),   // flipped Y
+			-1.0f, 1.0f
+		);
+
 
 		xPos.Content = "Camera X : " + to_string(window.camera.position.x);
 		yPos.Content = "Camera Y : " + to_string(window.camera.position.y);
 
-		scene.mouse.Update(window.window, h, deltaTime,window.camera);
+		mousePosX.Content = "Mouse X : " + to_string(scene.mouse.worldPosition.x);
+		mousePosY.Content = "Mouse Y : " + to_string(scene.mouse.worldPosition.y);
+
+		obstaclePosX.Content = "Obstacle X : " + to_string(obstacle2->Transform.Position.x);
+		obstaclePosY.Content = "Obstacle Y : " + to_string(obstacle2->Transform.Position.y);
+
+		cameraZoom.Content = "Camera Zoom : " + to_string(window.camera.zoom.x);
+
+		scene.mouse.Update(window.window, screenSize, deltaTime,window.camera);
 		scene.Update(deltaTime);
 		scene.Draw(renderer);
-		renderer.Draw(txt);
+		//renderer.Draw(txt);
 		renderer.Draw(xPos);
 		renderer.Draw(yPos);
+		renderer.Draw(mousePosX);
+		renderer.Draw(mousePosY);
+		renderer.Draw(obstaclePosX);
+		renderer.Draw(obstaclePosY);
+		renderer.Draw(cameraZoom);
 
 		renderer.Render(proj);
 

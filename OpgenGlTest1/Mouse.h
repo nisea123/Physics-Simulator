@@ -10,10 +10,14 @@ class Mouse
 public:
 	Vec2f position;
 	Vec2f lastPosition;
+	Vec2f worldPosition;
 	std::deque<Vec2f> dragHistory;
+	
 
 	float a = 0.f;
- 	float t = .1f;
+	float t = .1f; // Time window for drag history in seconds
+
+	float scrollDelta = 0.f;
 
 	float throwStrength = 1.5f;
 
@@ -21,14 +25,26 @@ public:
 	bool m1Prev = false;
 	bool m1Pressed = false;
 
-	void Update(GLFWwindow* window, unsigned int height, float dt,Camera& camera) {
+	Mouse() {
+		glfwSetWindowUserPointer(glfwGetCurrentContext(), this);
+	}
+
+	static void ScrollCallBack(GLFWwindow* window, double xoffset, double yoffset) {
+		Mouse* mouse = static_cast<Mouse*>(glfwGetWindowUserPointer(window));
+		if (!mouse) return;
+
+		mouse->scrollDelta = (float)yoffset;
+	}
+	void Update(GLFWwindow* window, Vec2f screenSize, float dt,Camera& camera) {
+		scrollDelta *= 0.2f;
 		m1Prev = m1;
 		double x, y;
 		glfwGetCursorPos(window, &x, &y);
-		y = height - y;
+		y = screenSize.y - y;
 
 		lastPosition = position;
-		position = Vec2f((float)x,(float)y) + camera.position;
+		position = Vec2f((float)x,(float)y);
+		worldPosition = camera.ScreenToWorld(position, screenSize);
 
 		dragHistory.push_back(position - lastPosition);
 		a += dt;
@@ -37,6 +53,9 @@ public:
 
 		m1 = glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS;
 		m1Pressed = m1 && !m1Prev;
+
+		glfwSetScrollCallback(window, ScrollCallBack);
+		camera.zoom = camera.zoom * powf(1.1f,scrollDelta);
 	}
 
 	Vec2f GetDragDistance() {

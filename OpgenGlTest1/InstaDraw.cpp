@@ -14,7 +14,7 @@ void Renderer::DrawArrow(ArrowDesc& desc) {
 	// Head
 	ShapeInstance head;
 
-	head.position = tipPos + camera.position;
+	head.position = tipPos;
 	head.size = { arrowHeight,arrowWidth };
 	head.rotation = atan2(dir.y, dir.x);
 	head.color = desc.Color;
@@ -37,7 +37,7 @@ void Renderer::DrawArrow(ArrowDesc& desc) {
 	Vec2f size = { len,desc.Thickness };
 	float angle = atan2(dir.y, dir.x);
 
-	shaft.position = midPoint + camera.position;
+	shaft.position = midPoint;
 	shaft.size = size;
 	shaft.rotation = angle;
 	shaft.color = desc.Color;
@@ -63,7 +63,7 @@ void Renderer::DrawLine(LineDesc& desc) {
 	Vec2f size = { len,desc.Thickness };
 	float angle = atan2(dir.y, dir.x);
 
-	line.position = midPoint + camera.position;
+	line.position = midPoint;
 	line.size = size;
 	line.rotation = angle;
 	line.color = desc.Color;
@@ -79,8 +79,8 @@ void Renderer::DrawText(TextDesc& desc) {
 
 	float lineHeight = desc.TextFont.lineHeight;
 
-	float x = orgX + camera.position.x;
-	float y = desc.Position.y - lineHeight + camera.position.y;
+	float x = orgX;
+	float y = desc.Position.y - lineHeight;
 
 	float r = 0.0f, g = 0.0f, b = 0.0f;
 

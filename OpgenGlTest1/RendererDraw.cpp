@@ -27,7 +27,7 @@ void Renderer::Draw(const Rectangle& item) {
 	ShapeInstance shapeInstance;
 
 	shapeInstance.color = item.Color;
-	shapeInstance.position = item.Transform.Position + camera.position;
+	shapeInstance.position = item.Transform.Position;
 	shapeInstance.size = item.Size;
 	shapeInstance.radius = item.CornerRadius;
 	shapeInstance.type = static_cast<float>(item.ShapeType);
@@ -41,8 +41,8 @@ void Renderer::Draw(const Circle& item) {
 	ShapeInstance shapeInstance;
 
 	shapeInstance.color = item.Color;
-	shapeInstance.position = item.Transform.Position + camera.position;
-	shapeInstance.size = Vec2f(item.Radius,item.Radius) * 2 ;
+	shapeInstance.position = item.Transform.Position;
+	shapeInstance.size = Vec2f(item.Radius) * 2;
 	shapeInstance.radius = item.Radius;
 	shapeInstance.type = static_cast<float>(item.ShapeType);
 
@@ -60,7 +60,7 @@ void Renderer::Draw(const Line& item) {
 	Vec2f size = { len,item.Thickness };
 	float angle = atan2(dir.y, dir.x);
 
-	shapeInstance.position = midPoint + camera.position;
+	shapeInstance.position = midPoint;
 	shapeInstance.size = size;
 	shapeInstance.rotation = angle;
 	shapeInstance.color = item.Color;
@@ -85,7 +85,7 @@ void Renderer::Draw(const Line& item, float trimmed) {
 	Vec2f size = { len,item.Thickness };
 	float angle = atan2(dir.y, dir.x);
 
-	shapeInstance.position = midPoint + camera.position;
+	shapeInstance.position = midPoint;
 	shapeInstance.size = size;
 	shapeInstance.rotation = angle;
 	shapeInstance.color = item.Color;
@@ -111,8 +111,8 @@ void Renderer::DrawArrowHead(const Arrow& item) {
 	
 	ShapeInstance shapeInstance;
 
-	shapeInstance.position = tipPos + camera.position;
-	shapeInstance.size = { arrowHeight,arrowWidth };
+	shapeInstance.position = tipPos;
+	shapeInstance.size = Vec2f(arrowHeight,arrowWidth);
 	shapeInstance.rotation = atan2(dir.y, dir.x);
 	shapeInstance.color = item.Color;
 	shapeInstance.type = static_cast<float>(item.ShapeType);
@@ -126,7 +126,7 @@ void Renderer::Draw(const Arc& item) {
 	float num = item.num;
 	float rad = item.Radius;
 	float rot = item.Transform.Rotation.radians;
-	Vec2f pos = item.Transform.Position + camera.position;
+	Vec2f pos = item.Transform.Position;
 
 	int m = num * (1 - item.shownPercentage);
 

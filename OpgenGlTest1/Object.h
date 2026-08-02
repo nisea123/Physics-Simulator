@@ -61,12 +61,11 @@ public:
 class Rectangle : public Object 
 {
 public:
-	Vec2f Size;
+	Vec2f Size = Vec2f(10.0f, 10.0f);
 	float CornerRadius = 0.f;
 	static constexpr ObjectType Type = ObjectType::Rectangle;
 
 	Rectangle() {
-	 Size = Vec2f(10.0f ,10.0f);
 	 Transform.Position = Vec2f(100.f, 100.f);
 	 ShapeType = Type;
 	}
@@ -74,6 +73,11 @@ public:
 	{
 		Size = siz;
 		Transform.Position = pos;
+		ShapeType = Type;
+	};
+	Rectangle(bool visible) {
+		Visible = visible;
+		Transform.Position = Vec2f(100.f, 100.f);
 		ShapeType = Type;
 	};
 	bool Contains(Vec2f p) override;
@@ -138,6 +142,10 @@ public:
 	Arrow() {
 		ShapeType = Type;
 	}
+	Arrow(bool visible) {
+		Visible = visible;
+		ShapeType = Type;
+	}
 	bool Contains(Vec2f p) override;
 
 	void Draw(Renderer& renderer) override;
@@ -159,7 +167,10 @@ public:
 	Arc() {
 		ShapeType = Type;
 	}
-
+	Arc(bool visible) {
+		Visible = visible;
+		ShapeType = Type;
+	}
 	bool Contains(Vec2f p) override;
 
 	void Draw(Renderer& renderer) override;

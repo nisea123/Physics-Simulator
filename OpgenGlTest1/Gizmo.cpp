@@ -9,19 +9,19 @@
 void Gizmo::Init() {
 
 	// Adding movement arrows
-	handles.emplace_back(std::make_unique<Arrow>(), GizmoHandleType::Move, Vec2f(-1, 0)); // Left Arrow
-	handles.emplace_back(std::make_unique<Arrow>(), GizmoHandleType::Move, Vec2f(0, 1)); // Up Arrow
-	handles.emplace_back(std::make_unique<Arrow>(), GizmoHandleType::Move, Vec2f(1, 0)); // Right Arrow
-	handles.emplace_back(std::make_unique<Arrow>(), GizmoHandleType::Move, Vec2f(0, -1)); // Down Arrow
+	handles.emplace_back(std::make_unique<Arrow>(false), GizmoHandleType::Move, Vec2f(-1, 0)); // Left Arrow
+	handles.emplace_back(std::make_unique<Arrow>(false), GizmoHandleType::Move, Vec2f(0, 1)); // Up Arrow
+	handles.emplace_back(std::make_unique<Arrow>(false), GizmoHandleType::Move, Vec2f(1, 0)); // Right Arrow
+	handles.emplace_back(std::make_unique<Arrow>(false), GizmoHandleType::Move, Vec2f(0, -1)); // Down Arrow
 
 	//Adding rotation
-	handles.emplace_back(std::make_unique<Arc>(), GizmoHandleType::Rotate, Vec2f(1.8, 1.8));
+	handles.emplace_back(std::make_unique<Arc>(false), GizmoHandleType::Rotate, Vec2f(1.8, 1.8));
 
 	//Adding scale
-	handles.emplace_back(std::make_unique<Rectangle>(), GizmoHandleType::Scale, Vec2f(-1, -1));
-	handles.emplace_back(std::make_unique<Rectangle>(), GizmoHandleType::Scale, Vec2f(1, 1));
-	handles.emplace_back(std::make_unique<Rectangle>(), GizmoHandleType::Scale, Vec2f(1, -1));
-	handles.emplace_back(std::make_unique<Rectangle>(), GizmoHandleType::Scale, Vec2f(-1, 1));
+	handles.emplace_back(std::make_unique<Rectangle>(false), GizmoHandleType::Scale, Vec2f(-1, -1));
+	handles.emplace_back(std::make_unique<Rectangle>(false), GizmoHandleType::Scale, Vec2f(1, 1));
+	handles.emplace_back(std::make_unique<Rectangle>(false), GizmoHandleType::Scale, Vec2f(1, -1));
+	handles.emplace_back(std::make_unique<Rectangle>(false), GizmoHandleType::Scale, Vec2f(-1, 1));
 
 	std::cout << "Gizmo initialized" << std::endl;
 }
