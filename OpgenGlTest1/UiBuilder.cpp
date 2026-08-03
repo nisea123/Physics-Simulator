@@ -11,9 +11,9 @@ void UiManager::Init() {
 	unsigned int width = mode->width;
 	unsigned int height = mode->height;
 
-	UiButton* spawnBlocks = SpawnUi<UiButton>(font, Vec2f(300.f, 100.f), Vec2f(width / 2.f, height / 1.1f));
+	UiButton* spawnBlocks = SpawnUi<UiButton>(font, UDim2(Vec2f(0.f,0.f),Vec2f(300.f, 100.f)), UDim2(Vec2f(0.f,0.f),Vec2f(width / 2.f, height / 1.1f)));
 	spawnBlocks->text.Content = "Rectangle";
-	spawnBlocks->rect.CornerRadius = 25.f;
+	spawnBlocks->CornerRadius = 25.f;
 
 	spawnBlocks->OnClick = [=, this]() 
 		{
@@ -21,12 +21,23 @@ void UiManager::Init() {
 			//obj->Transform.Rotation = Angle::Degrees(67);
 		};
 
-	UiButton* spawnCircle = SpawnUi<UiButton>(font, Vec2f(300.f, 100.f), Vec2f(width / 2.f, height / 1.25f));
+	UiButton* spawnCircle = SpawnUi<UiButton>(font, UDim2(Vec2f(0.f),Vec2f(300.f, 100.f)), UDim2(Vec2f(0.f),Vec2f(width / 2.f, height / 1.25f)));
 	spawnCircle->text.Content = "Circle";
-	spawnCircle->rect.CornerRadius = 25.f;
+	spawnCircle->CornerRadius = 25.f;
 
 	spawnCircle->OnClick = [=, this]()
 		{
 			Circle* obj = objects.SpawnPhysicsObject<Circle>(50.f, Vec2f(width / 2.f, height / 2.f));
 		};
+}
+
+void UiManager::BuildDebugger() {
+	GLFWmonitor* monitor = glfwGetPrimaryMonitor();
+	const GLFWvidmode* mode = glfwGetVideoMode(monitor);
+	Font& font = Fonts.GetDefaultFont();
+
+	unsigned int width = mode->width;
+	unsigned int height = mode->height;
+
+
 }

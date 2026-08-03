@@ -5,7 +5,7 @@
 #include "TextRenderer.h"
 #include "Object.h"
 #include "ObjectData.h"
-#include "Ui.h"
+#include "UiElements.h"
 #include "FontManager.h"
 #include "Camera.h"
 
@@ -17,6 +17,7 @@ class Renderer
 {
 public:
 	Camera& camera;
+	Vec2f& windowSize;
 
 	ObjectRenderer objRenderer;
 	TextRenderer txtRenderer;
@@ -26,9 +27,10 @@ public:
 	
 	FontManager fontManager;
 
-	Renderer(Camera& cam) : camera(cam), fontManager(), objectShader("default.vert", "default.frag"),
+	Renderer(Camera& cam,Vec2f& windowSiz) : camera(cam), fontManager(), objectShader("default.vert", "default.frag"),
 		textShader("text.vert", "text.frag"),
-		objRenderer(objectShader,camera), txtRenderer(textShader,camera)
+		objRenderer(objectShader,camera), txtRenderer(textShader,camera),
+		windowSize(windowSiz)
 		 {};
 
 	void Draw(const Rectangle& item);
@@ -39,10 +41,10 @@ public:
 	void Draw(const Arrow& item);
 	void Draw(const Arc& item);
 	void Draw(const Text& txt);
+	void Draw(const Tracker& tracker);
 	void Draw(const UiButton& item);
 	void Draw(const UiFrame& item);
 	void Draw(const UiSlider& item);
-	void Draw(const UiText& item);
 
 	void DrawArrow(ArrowDesc& desc);
 	void DrawLine(LineDesc& desc);

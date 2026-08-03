@@ -44,7 +44,7 @@ ObjectRenderer::ObjectRenderer(Shader& s,Camera& cam)
 }
 
 void ObjectRenderer::Render(const glm::mat4& proj) {
-
+	
 	if (shapeInstances.empty()) return;
 
 	shader.Activate();

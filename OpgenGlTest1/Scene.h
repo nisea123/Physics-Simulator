@@ -36,10 +36,10 @@ public:
 
 	void Draw(Renderer& renderer);
 	void Update(float dt);
-	void UpdateHover(Mouse& mouse);
-	void UpdateSelection(Mouse& mouse);
-	void UpdateDragging(Mouse& mouse, float dt);
-	void UpdateGizmo(Mouse& mouse);
+	void UpdateHover();
+	void UpdateSelection();
+	void UpdateDragging();
+	void UpdateGizmo();
 
 	RigidBody* AssignRigidBody(Object* obj);
 };

@@ -170,16 +170,19 @@
     <ClCompile Include="Structs.cpp" />
     <ClCompile Include="TextRenderer.cpp" />
     <ClCompile Include="Transform.cpp" />
+    <ClCompile Include="UDim2.cpp" />
     <ClCompile Include="UiBuilder.cpp" />
     <ClCompile Include="Ui.h" />
     <ClCompile Include="VAO.cpp" />
     <ClCompile Include="VBO.cpp" />
+    <ClCompile Include="Vec2f.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="default.vert" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="CoordinateSpace.h" />
     <ClInclude Include="EBO.h" />
     <ClInclude Include="Font.h" />
     <ClInclude Include="FontManager.h" />
@@ -202,10 +205,13 @@
     <ClInclude Include="Text.h" />
     <ClInclude Include="TextRenderer.h" />
     <ClInclude Include="Transform.h" />
+    <ClInclude Include="UDim2.h" />
+    <ClInclude Include="UiElements.h" />
     <ClInclude Include="UiManager.h" />
     <ClInclude Include="VAO.h" />
     <ClInclude Include="VBO.h" />
     <ClInclude Include="shaderClass.h" />
+    <ClInclude Include="Vec2f.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>
   <ItemGroup>

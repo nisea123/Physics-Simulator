@@ -1,4 +1,5 @@
 #include "Renderer.h"
+#include "CoordinateSpace.h"
 
 using namespace std;
 
@@ -165,13 +166,22 @@ void Renderer::Draw(const Arc& item) {
 
 void Renderer::Draw(const Text& txt)
 {
-	float orgX = txt.Transform.Position.x;
-	float limitX = 1920;
+	Vec2f siz = txt.getAbsoluteSize(windowSize) / 2.f;
+	Vec2f extraPos = camera.position - windowSize / 2.f;
+	if (txt.Space == CoordinateSpace::World) {
+		extraPos = Vec2f(0.f);
+	}
+	if (!txt.getParent()) {
+		siz = Vec2f(0.f);
+	}
+	Vec2f pos = txt.getAbsolutePosition(windowSize) + extraPos;
+	float orgX = pos.x - siz.x;
+	float limitX = 1920 + extraPos.y;
 
 	float lineHeight = txt.font.lineHeight;
 
 	float x = orgX;
-	float y = txt.Transform.Position.y - lineHeight;
+	float y = pos.y - lineHeight + siz.y;
 
 	float r = 0.0f, g = 0.0f, b = 0.0f;
 
@@ -221,20 +231,31 @@ void Renderer::Draw(const Text& txt)
 
 }
 
+void Renderer::Draw(const Tracker& tracker) {
+	Text desc(tracker.font);
+	desc.Transform.Position = tracker.Transform.Position;
+	desc.Content = tracker.StartText + std::to_string(*tracker.Value) + tracker.EndText;
+	Draw(desc);
+}
+
 void Renderer::Draw(const UiButton& item) {
-	Draw(item.rect);
+	Vec2f extraPos = camera.position - windowSize / 2.f;
+	if (item.Space == CoordinateSpace::World) {
+		extraPos = Vec2f(0.f);
+	}
+	Vec2f newPos = item.getAbsolutePosition(windowSize) + extraPos;
+	Vec2f newSize = item.getAbsoluteSize(windowSize);
+	Rectangle rect(newSize,newPos);
+	Draw(rect);
+	
+
 	Draw(item.text);
 }
 
 void Renderer::Draw(const UiFrame& item) {
-	Draw(item.rect);
+	//Draw(item.rect);
 }
 
 void Renderer::Draw(const UiSlider& item) {
-	Draw(item.rect);
-}
-
-void Renderer::Draw(const UiText& item) {
-	Draw(item.rect);
-	Draw(item.text);
+	//Draw(item.rect);
 }

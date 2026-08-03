@@ -12,3 +12,10 @@ struct Transform
 	static Vec2f RotatePoint(Vec2f point, Angle angle);
 	static Vec2f RotateAroundPivot(Vec2f point, Vec2f pivot, float angle);
 };
+
+struct UiTransform
+{
+	UDim2 Position = { 0.0f, 0.0f };
+	UDim2 Size = { 0.0f, 0.0f };
+	Angle Rotation = Angle::Degrees(0);
+};

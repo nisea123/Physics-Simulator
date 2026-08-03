@@ -70,6 +70,12 @@
     <Filter Include="Source Files\Physics">
       <UniqueIdentifier>{e19ba791-c45b-41d5-8816-bc0085f0d18f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Data\Ui">
+      <UniqueIdentifier>{ac52421a-9048-43b5-9a1d-2d6155e4c997}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Data\Object">
+      <UniqueIdentifier>{aac59145-e497-4309-80cf-ed3fb9a3921e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="glad.c">
@@ -89,9 +95,6 @@
     </ClCompile>
     <ClCompile Include="shaderClass.cpp">
       <Filter>Source Files\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="Ui.h">
-      <Filter>Header Files\Data</Filter>
     </ClCompile>
     <ClCompile Include="ObjectRenderer.cpp">
       <Filter>Source Files\Renderer</Filter>
@@ -150,6 +153,15 @@
     <ClCompile Include="CollisionSystem.cpp">
       <Filter>Source Files\Physics</Filter>
     </ClCompile>
+    <ClCompile Include="Vec2f.cpp">
+      <Filter>Source Files\Data</Filter>
+    </ClCompile>
+    <ClCompile Include="UDim2.cpp">
+      <Filter>Source Files\Data</Filter>
+    </ClCompile>
+    <ClCompile Include="Ui.h">
+      <Filter>Header Files\Data\Ui</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="EBO.h">
@@ -173,15 +185,6 @@
     <ClInclude Include="Transform.h">
       <Filter>Header Files\Math</Filter>
     </ClInclude>
-    <ClInclude Include="Object.h">
-      <Filter>Header Files\Data</Filter>
-    </ClInclude>
-    <ClInclude Include="Text.h">
-      <Filter>Header Files\Data</Filter>
-    </ClInclude>
-    <ClInclude Include="ShapeInstance.h">
-      <Filter>Header Files\Data</Filter>
-    </ClInclude>
     <ClInclude Include="Renderer.h">
       <Filter>Header Files\Core\Renderer</Filter>
     </ClInclude>
@@ -196,12 +199,6 @@
     </ClInclude>
     <ClInclude Include="Gizmo.h">
       <Filter>Header Files\Core\Manager</Filter>
-    </ClInclude>
-    <ClInclude Include="ObjectData.h">
-      <Filter>Header Files\Data</Filter>
-    </ClInclude>
-    <ClInclude Include="ObjectCast.h">
-      <Filter>Header Files\Core</Filter>
     </ClInclude>
     <ClInclude Include="Structs.h">
       <Filter>Header Files\Math</Filter>
@@ -218,9 +215,6 @@
     <ClInclude Include="FontManager.h">
       <Filter>Header Files\Core\Renderer</Filter>
     </ClInclude>
-    <ClInclude Include="Font.h">
-      <Filter>Header Files\Data</Filter>
-    </ClInclude>
     <ClInclude Include="PhysicalVector.h">
       <Filter>Header Files\Physics</Filter>
     </ClInclude>
@@ -235,6 +229,36 @@
     </ClInclude>
     <ClInclude Include="Camera.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Vec2f.h">
+      <Filter>Header Files\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="UDim2.h">
+      <Filter>Header Files\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectCast.h">
+      <Filter>Header Files\Core\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Font.h">
+      <Filter>Header Files\Data\Ui</Filter>
+    </ClInclude>
+    <ClInclude Include="Text.h">
+      <Filter>Header Files\Data\Ui</Filter>
+    </ClInclude>
+    <ClInclude Include="Object.h">
+      <Filter>Header Files\Data\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectData.h">
+      <Filter>Header Files\Data\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="ShapeInstance.h">
+      <Filter>Header Files\Data\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="UiElements.h">
+      <Filter>Header Files\Data\Ui</Filter>
+    </ClInclude>
+    <ClInclude Include="CoordinateSpace.h">
+      <Filter>Header Files\Data</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

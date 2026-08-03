@@ -27,7 +27,7 @@ struct LineDesc {
 
 struct TextDesc {
 	std::string Content;
-	Vec2f Position;
+	UDim2 Position;
 
 	Font& TextFont;
 

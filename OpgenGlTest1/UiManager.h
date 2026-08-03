@@ -1,8 +1,7 @@
 #pragma once
 
 #include "ObjectManager.h"
-#include "Ui.h"
-#include "Font.h"
+#include "UiElements.h"
 #include "FontManager.h"
 
 class UiManager
@@ -24,4 +23,5 @@ public:
 		return ptr;
 	};
 	void Init();
+	void BuildDebugger();
 };

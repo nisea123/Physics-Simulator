@@ -4,6 +4,7 @@
 #include "Structs.h"
 #include "Transform.h"
 #include "RigidBody.h"
+#include "CoordinateSpace.h"
 
 #include <memory>
 
@@ -30,6 +31,7 @@ public:
 	bool Selectable = true;
 	bool Selected = false;
 	ObjectType ShapeType = ObjectType::Object;
+	CoordinateSpace Space = CoordinateSpace::World;
 
 	std::unique_ptr<RigidBody> PhysicsBody;
 

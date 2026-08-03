@@ -4,50 +4,48 @@
 #include <vector>
 #include <functional>
 
-#include "Object.h"
-#include "Text.h"
+#include "Transform.h"
+#include "CoordinateSpace.h"
 
 class UiElement
 {
 public:
-	Rectangle rect;
+
+	UiTransform Transform;
 	bool Visible = true;
-	UiElement* parent = nullptr;
+	float CornerRadius = 0.f;
+	CoordinateSpace Space = CoordinateSpace::Screen;
 
 	std::vector<std::unique_ptr<UiElement>> Children;
 
-	virtual bool Contains(Vec2f p) { return rect.Contains(p); };
+	virtual bool Contains(Vec2f p);
 	std::function<void()> OnClick;
 
-	virtual ~UiElement() = default;
-};
-
-class UiFrame : public UiElement
-{
-public:
-	//to do
-};
-
-class UiButton : public UiElement
-{
-public:
-	Text text;
-	bool isChecked = false;
-	UiButton(Font& font, Vec2f size, Vec2f pos) : text(font) {
-		rect = Rectangle(size, pos);
-		text.Transform.Position = Vec2f(pos.x - size.x / 2.f,pos.y + size.y / 2.f);
+	UiElement* getParent() const {
+		return parent;
 	}
-	//to do
-};
+	
+	Vec2f getAbsoluteSize(Vec2f& windowSize) const {
+		if (parent) {
+			Vec2f newSize = parent->getAbsoluteSize(windowSize);
+			return Transform.Size.ToAbsolute(newSize);
+		}
+		else {
+			return Transform.Size.ToAbsolute(windowSize);
+		}
+	}
 
-class UiSlider : public UiElement
-{
-public:
-	//to do
-};
+	Vec2f getAbsolutePosition(Vec2f& windowSize) const {
+		if (parent) {
+			Vec2f newSize = parent->getAbsoluteSize(windowSize);
+			return parent->getAbsolutePosition(windowSize) + Transform.Position.ToAbsolute(newSize);
+		}
+		else {
+			return Transform.Position.ToAbsolute();
+		}
+	}
 
-class UiText : public UiElement
-{
-public:
-	Text text;
+	virtual ~UiElement() = default;
+protected:
+	UiElement* parent = nullptr;
 };

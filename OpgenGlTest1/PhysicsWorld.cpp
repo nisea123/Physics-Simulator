@@ -52,10 +52,11 @@ void PhysicsWorld::DisplayArrows(Renderer& renderer) {
 			ForceDesc.Thickness = std::min(.1f * forceScale, 10.f);
 			renderer.DrawArrow(ForceDesc);
 
-			TextDesc t(font);
+			Text t(font);
 			t.Content = name;
-			t.Position = (ForceDesc.Start + ForceDesc.End) / 2.f;
-			renderer.DrawText(t);
+			t.Transform.Position = UDim2(Vec2f(0.f,0.f),Vec2f(ForceDesc.Start + ForceDesc.End) / 2.f);
+			t.Space = CoordinateSpace::World;
+			renderer.Draw(t);
 		}
 
 

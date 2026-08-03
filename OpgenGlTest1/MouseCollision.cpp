@@ -1,6 +1,7 @@
 #include <algorithm>
 
 #include "Object.h"
+#include "UiElements.h"
 
 bool Triangle::Contains(Vec2f p)
 {
@@ -60,4 +61,13 @@ bool Arc::Contains(Vec2f p)
 	Vec2f d = { p.x - Transform.Position.x, p.y - Transform.Position.y };
 	return (d.x * d.x + d.y * d.y) <= Radius * Radius;
 	return false;
+}
+
+bool UiElement::Contains(Vec2f p)
+{
+	if (!Visible) return false;
+	Vec2f min = { Transform.Position.Offset.x, Transform.Position.Offset.y };
+	Vec2f max = { Transform.Position.Offset.x + Transform.Size.Offset.x, Transform.Position.Offset.y + Transform.Size.Offset.y };
+	return p.x >= min.x && p.x <= max.x &&
+		p.y >= min.y && p.y <= max.y;
 }

@@ -10,7 +10,6 @@ void Renderer::DrawArrow(ArrowDesc& desc) {
 	Vec2f tipPos = desc.End;
 	Vec2f dir = Normalize(desc.End - desc.Start);
 
-
 	// Head
 	ShapeInstance head;
 
@@ -74,13 +73,14 @@ void Renderer::DrawLine(LineDesc& desc) {
 }
 
 void Renderer::DrawText(TextDesc& desc) {
-	float orgX = desc.Position.x;
+	Vec2f newPos = desc.Position.ToAbsolutePosition(windowSize, camera.position);
+	float orgX = newPos.x;
 	float limitX = 1920;
 
 	float lineHeight = desc.TextFont.lineHeight;
 
 	float x = orgX;
-	float y = desc.Position.y - lineHeight;
+	float y = newPos.y - lineHeight;
 
 	float r = 0.0f, g = 0.0f, b = 0.0f;
 

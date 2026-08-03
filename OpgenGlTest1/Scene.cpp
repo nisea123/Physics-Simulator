@@ -1,6 +1,7 @@
 #include "Scene.h"
 #include "Renderer.h"
 #include "Object.h"
+#include "UiElements.h"
 
 #include <algorithm>
 
@@ -26,8 +27,6 @@ void Scene::Draw(Renderer& renderer) {
 			renderer.Draw(*c);
 		else if (auto* t = dynamic_cast<UiSlider*>(o))
 			renderer.Draw(*t);
-		else if (auto* y = dynamic_cast<UiText*>(o))
-			renderer.Draw(*y);
 	}
 
 	for (GizmoHandle& handle : gizmo.handles) {
@@ -43,13 +42,13 @@ void Scene::Draw(Renderer& renderer) {
 void Scene::Update(float dt) {
 	physicsWorld.Step(dt);
 
-	UpdateHover(mouse);
-	UpdateSelection(mouse);
-	UpdateDragging(mouse, dt);
+	UpdateHover();
+	UpdateSelection();
+	UpdateDragging();
 	//UpdateGizmo(mouse);
 }
 
-void Scene::UpdateHover(Mouse& mouse) {
+void Scene::UpdateHover() {
 
 	hoveredObject = nullptr;
 	hoveredUi = nullptr;
@@ -82,7 +81,7 @@ void Scene::UpdateHover(Mouse& mouse) {
 	}
 }
 
-void Scene::UpdateSelection(Mouse& mouse) {
+void Scene::UpdateSelection() {
 	if (mouse.m1Pressed)
 	{
 		if (hoveredUi) {
@@ -105,7 +104,7 @@ void Scene::UpdateSelection(Mouse& mouse) {
 	}
 }
 
-void Scene::UpdateDragging(Mouse& mouse,float dt) {
+void Scene::UpdateDragging() {
 	Vec2f mouseDelta = mouse.position - mouse.lastPosition;
 	if (mouse.m1 && holdingObject) {
 		
@@ -113,7 +112,7 @@ void Scene::UpdateDragging(Mouse& mouse,float dt) {
 		holdingObject->Transform.Position += mouseDelta / camera.zoom;
 		holdingObject->Selected = true;
 	}
-	else if (!holdingObject && mouse.m1) {
+	else if (!holdingObject && !holdingHandle && mouse.m1) {
 		camera.lastPosition = camera.position;
 		camera.position -= mouseDelta;
 	}
@@ -129,7 +128,7 @@ void Scene::UpdateDragging(Mouse& mouse,float dt) {
 	}
 }
 
-void Scene::UpdateGizmo(Mouse& mouse) {
+void Scene::UpdateGizmo() {
 
 	if (selectedObject) {
 		gizmo.target = selectedObject;

@@ -5,13 +5,11 @@
 #include <chrono>
 #include <math.h>
 
-#include "shaderClass.h"
 #include "Object.h"
-#include "Renderer.h"
-#include "Mouse.h"
 #include "Scene.h"
 #include "ObjectCast.h"
 #include "Window.h"
+#include "UiElements.h"
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -87,27 +85,29 @@ int main() {
 
 	//Text txt(renderer.fontManager.GetDefaultFont());
 	//txt.Transform.Position = Vec2f(width / 2.f, textOffsetY);
+	Camera& cam = window.camera;
+	Mouse& mouse = scene.mouse;
 
-	Text xPos(renderer.fontManager.GetDefaultFont());
-	xPos.Transform.Position = Vec2f(textOffset, height - textOffsetY);
+	Tracker xPos(renderer.fontManager.GetDefaultFont(), cam.position.x, "Camera X : ", "");
+	xPos.Transform.Position = UDim2(0,0,textOffset, height - textOffsetY);
 
-	Text yPos(renderer.fontManager.GetDefaultFont());
-	yPos.Transform.Position = Vec2f(textOffset, height - textOffsetY * 2);
+	Tracker yPos(renderer.fontManager.GetDefaultFont(), cam.position.y, "Camera Y : ", "");
+	yPos.Transform.Position = UDim2(0,0,textOffset, height - textOffsetY * 2);
 	
-	Text mousePosX(renderer.fontManager.GetDefaultFont());
-	mousePosX.Transform.Position = Vec2f(textOffset, height - textOffsetY * 3);
+	Tracker mousePosX(renderer.fontManager.GetDefaultFont(), mouse.worldPosition.x, "Mouse X : ", "");
+	mousePosX.Transform.Position = UDim2(0,0,textOffset, height - textOffsetY * 3);
 
-	Text mousePosY(renderer.fontManager.GetDefaultFont());
-	mousePosY.Transform.Position = Vec2f(textOffset, height - textOffsetY * 4);
+	Tracker mousePosY(renderer.fontManager.GetDefaultFont(), mouse.worldPosition.y, "Mouse Y : ", "");
+	mousePosY.Transform.Position = UDim2(0,0,textOffset, height - textOffsetY * 4);
 
-	Text obstaclePosX(renderer.fontManager.GetDefaultFont());
-	obstaclePosX.Transform.Position = Vec2f(textOffset, height - textOffsetY * 5);
+	Tracker obstaclePosX(renderer.fontManager.GetDefaultFont(),obstacle2->Transform.Position.x,"Obstacle X : ","");
+	obstaclePosX.Transform.Position = UDim2(0,0,textOffset, height - textOffsetY * 5);
 
-	Text obstaclePosY(renderer.fontManager.GetDefaultFont());
-	obstaclePosY.Transform.Position = Vec2f(textOffset, height - textOffsetY * 6);
+	Tracker obstaclePosY(renderer.fontManager.GetDefaultFont(), obstacle2->Transform.Position.y, "Obstacle Y : ", "");
+	obstaclePosY.Transform.Position = UDim2(0,0,textOffset, height - textOffsetY * 6);
 
-	Text cameraZoom(renderer.fontManager.GetDefaultFont());
-	cameraZoom.Transform.Position = Vec2f(textOffset, height - textOffsetY * 7);
+	Tracker cameraZoom(renderer.fontManager.GetDefaultFont(), cam.zoom.x, "Camera Zoom", "");
+	cameraZoom.Transform.Position = UDim2(0,0,textOffset, height - textOffsetY * 7);
 
 	float i = 0;
 
@@ -141,22 +141,10 @@ int main() {
 		txt.Content = "Number of objects : " + to_string(num);
 		*/
 		proj = glm::ortho(
-			window.camera.position.x - (float)width / (2 * zoom), window.camera.position.x + (float)width / (2 * zoom),
-			window.camera.position.y - (float)height / (2 * zoom), window.camera.position.y + (float)height / (2 * zoom),   // flipped Y
+			cam.position.x - (float)w / (2 * zoom), cam.position.x + (float)w / (2 * zoom),
+			cam.position.y - (float)h / (2 * zoom), cam.position.y + (float)h / (2 * zoom),   // flipped Y
 			-1.0f, 1.0f
 		);
-
-
-		xPos.Content = "Camera X : " + to_string(window.camera.position.x);
-		yPos.Content = "Camera Y : " + to_string(window.camera.position.y);
-
-		mousePosX.Content = "Mouse X : " + to_string(scene.mouse.worldPosition.x);
-		mousePosY.Content = "Mouse Y : " + to_string(scene.mouse.worldPosition.y);
-
-		obstaclePosX.Content = "Obstacle X : " + to_string(obstacle2->Transform.Position.x);
-		obstaclePosY.Content = "Obstacle Y : " + to_string(obstacle2->Transform.Position.y);
-
-		cameraZoom.Content = "Camera Zoom : " + to_string(window.camera.zoom.x);
 
 		scene.mouse.Update(window.window, screenSize, deltaTime,window.camera);
 		scene.Update(deltaTime);

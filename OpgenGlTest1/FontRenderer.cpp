@@ -1,5 +1,5 @@
 #include <iostream>
-#include "TextRenderer.h"
+#include "Font.h"
 #include <ft2build.h>
 #include FT_FREETYPE_H
 #include <string>

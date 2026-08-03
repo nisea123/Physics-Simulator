@@ -12,12 +12,13 @@ public:
 	Vec2f lastPosition;
 	Vec2f worldPosition;
 	std::deque<Vec2f> dragHistory;
-	
 
 	float a = 0.f;
 	float t = .1f; // Time window for drag history in seconds
 
 	float scrollDelta = 0.f;
+	float scrollSensitivity = 1.f;
+	float scrollDampen = 0.5f;
 
 	float throwStrength = 1.5f;
 
@@ -36,7 +37,7 @@ public:
 		mouse->scrollDelta = (float)yoffset;
 	}
 	void Update(GLFWwindow* window, Vec2f screenSize, float dt,Camera& camera) {
-		scrollDelta *= 0.2f;
+		scrollDelta *= scrollDampen; // Dampen the scroll delta to make zooming smoother.
 		m1Prev = m1;
 		double x, y;
 		glfwGetCursorPos(window, &x, &y);
@@ -44,7 +45,7 @@ public:
 
 		lastPosition = position;
 		position = Vec2f((float)x,(float)y);
-		worldPosition = camera.ScreenToWorld(position, screenSize);
+		worldPosition = camera.ScreenToWorld(position, screenSize); // Transforms the mouse position from screen space to world space using the camera's transformation.
 
 		dragHistory.push_back(position - lastPosition);
 		a += dt;
@@ -55,7 +56,7 @@ public:
 		m1Pressed = m1 && !m1Prev;
 
 		glfwSetScrollCallback(window, ScrollCallBack);
-		camera.zoom = camera.zoom * powf(1.1f,scrollDelta);
+		camera.zoom = camera.zoom * powf(1.1f,scrollDelta * scrollSensitivity);
 	}
 
 	Vec2f GetDragDistance() {
